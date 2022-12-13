@@ -1,0 +1,209 @@
+@charset "utf-8";
+@import url("../lib/design/font.css");
+* { margin: 0; padding: 0; font-family: NotoSans; vertical-align: baseline; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+img { border: 0; }
+ul, ol { list-style: none; }
+table { border-collapse: collapse; }
+em { font-style: normal; }
+input[type="checkbox"],
+input[type="radio"] { width: 13px; height: 13px; }
+body { font-size: 12px; text-align: center; }
+
+.print_page { margin: 0 auto; width: 595px; text-align: left; overflow: hidden;  page-break-after: always; line-height: 1.5; }
+.print_page h1,
+.print_page .seal { margin: 30px 0; width: 100%; font-size: 30px;  font-weight: bold; text-align: center; position: relative; overflow: hidden; }
+.print_page .seal { letter-spacing: 0.5em; }
+.print_page .seal span { font-size: 12px; position: absolute; top: 10px; right: 0; }
+.next { page-break-after: always; }
+
+/* 테이블 */
+.table_form { overflow: hidden; clear: both; }
+.table_form table { width: 100%; table-layout: fixed; clear: both; }
+.table_form table tr th,
+.table_form table tr td { padding: 8px 5px; height: 20px; line-height: 1.5; vertical-align: middle; border: 1px solid #000; }
+.table_form table tr th { font-weight: bold; text-align: center; background: #ECEBEB; }
+.table_form table tr .bg { background: #ECEBEB !important; }
+.table_form table tr th.bg_none { background: none; }
+
+/* float */
+.fl { float: left; }
+.fr { float: right; }
+
+/* margin */
+.mt_30 { margin-top: 30px; }
+
+/* 텍스트 LIST */
+.print_page p.bull_txt,
+.print_page ul.bull_txt li { padding-left: 15px; font-size: 11px; line-height: 150%; }
+.print_page .bull_txt span { margin-left: -15px; font-size: 12px; }
+
+/* Border Box */
+.border_box { padding: 15px 15px 0; text-align: justify; line-height: 170%; border: 1px solid #000; overflow: hidden; }
+
+/* Sign Area */
+.sign_area { padding: 25px 0 0; font-size: 14px; text-align: right; overflow: hidden; }
+.sign_cont { margin: 15px 0; }
+.sign_cont p + p { margin: 10px 0 0; }
+.sign_txt { text-indent: 10px; }
+
+/* 귀중, 귀하 */
+.date { margin:20px 0; font-size: 14px; text-align: center; } /* 하단 날짜 */
+.sign { font-size: 14px; } /* 하단 서명 */
+.app_nam { display: inline-block; margin-right:5px; min-width:100px; } /* 신청자 이름쓰는 란 */
+.big_txt { margin: 15px 0 0; font-size: 18px; font-weight: bold; } /* 하단부분 큰 글자 */
+
+/* 공백 */
+.blank { display: inline-block; min-width: 30px; }
+
+/* width */
+.w80 { min-width: 80px; }
+.w150 { min-width: 150px; }
+.w250 { min-width: 250px; }
+
+/* min height */
+.min_150 { min-height: 150px; }
+
+/* border */
+.bot_line { border-bottom: 1px solid #000; }
+
+/* align */
+.tal { text-align: left; }
+.tac { text-align: center; }
+.tar { text-align: right; }
+
+/* font */
+.fc_red { color: #ff0000; }
+
+
+/* 현장실습 종합 보고서 */
+.sau_page_01 { width: 553px; height: 948px; border: 1px solid #000; padding: 0 20px; }
+.sau_page_01 h1 {padding-top:50px;}
+.sau_page_01 .process { text-align: center; overflow: hidden; }
+.sau_page_01 .process p { font-size: 14px; }
+.sau_page_01 .process p * { font-size: 14px; vertical-align: middle; line-height: 15px; }
+.sau_page_01 .process p input[type="checkbox"] { margin: 0 5px; }
+.sau_page_01 .table_form { width:530px; font-size: 14px; margin: 210px 0 250px 12px  }
+.sau_page_01 .table_form table tr td { text-align: left; border: 1px solid #000; padding: 13px 5px; }
+.sau_page_01 .table_form table tr td.left { text-align: left; }
+.sau_page_01 .table_form table tr td.content { text-align: left; font-size:12px; vertical-align: top;line-height: 120%}
+.sau_page_01 .table_form table tr.border_none td {border-left:none; border-right:none}
+.sau_page_01 .table_form table tr td.border_l {border-left:1px solid #000}
+.sau_page_01 .table_form table tr td.border_r {border-right:1px solid #000}
+.sau_page_01 p {font-size: 15px;}
+.sau_page_01 ul.bull_txt li {font-size:15px}
+
+
+/* 현장실습 출석부 */
+.sau_page_02 h1 { margin: 10px 0 10px 0; }
+.sau_page_02 .table_form { font-size:14px; text-align:center; }
+.sau_page_02 .table_form table { margin-bottom: 0; }
+.sau_page_02 .table_form table tr th { line-height: 120% }
+.sau_page_02 .table_form table tr td { min-height: 15px;  line-height: 100%;}
+.sau_page_02 .table_form table tr td.left { text-align: left; }
+.sau_page_02 .table_form table tr td.content { text-align: left; font-size:12px;vertical-align: top;line-height: 120%}
+.sau_page_02 .table_form table tr td[colspan="5"] { padding: 8px 5px; }
+.sau_page_02 .table_form table tr td span { display:inline-block; width:50px; height:15px; border-bottom:1px solid #000 }
+
+
+/* 현장실습 수행평가표*/
+.sau_page_05 h1 { margin: 10px 0 10px 0; }
+.sau_page_05 .table_form { font-size:14px; }
+.sau_page_05 .table_form table { margin-bottom: 0; }
+.sau_page_05 .table_form table tr th { line-height: 120%; text-align:center;}
+.sau_page_05 .table_form table tr td { text-align: center; }
+.sau_page_05 .table_form table tr td.left { text-align: left; }
+.sau_page_05 .table_form table tr td.content { text-align: left; font-size:12px; vertical-align: top; line-height: 120%}
+.sau_page_05 .table_form table tr td span { display:inline-block; width:50px; height:15px; border-bottom:1px solid #000 }
+
+/* 협약서 */
+.agreement_page h1 { margin: 0 0 10px; font-size: 18px; }
+.agreement_page { margin: 10px auto; }
+.agreement_wrap dt { font-weight: bold; }
+.agr_list li { padding-left: 15px; position: relative; }
+.agr_list li .list_head { position: absolute; left: 0; }
+.agreement_date { margin:  0 auto 30px; width: 61%; }
+.agreement_date { overflow: hidden; }
+.agreement_date dt { float: left; width: 70px; }
+.agreement_date dd { padding-left: 70px; }
+.blank_date { display: inline-block; min-width: 30px; text-align: center; }
+.sign_wrap { margin: 50px auto 10px; text-align: center; font-size: 13px; }
+.sign_wrap dl { margin: 0 auto; width: 60%; text-align: left; }
+.sign_wrap dl dt { margin: 15px 0 5px; }
+.sign_wrap .tar { text-align: right; }
+.sign_name { margin-right: 10px; font-size: 14px; font-weight: bold; }
+.sign_pos { margin: 15px 0; position: relative; }
+.sign_img { position: absolute; right: 0; top: -50%; }
+.sign_img img { width: auto; height: auto; max-width: 60px; max-height: 60px; }
+
+.signNm { font-family: 'Nanum Pen Script', cursive; font-weight: bold; font-size: 25px; }
+
+
+.dl_list dd + dt{padding-top:10px;}
+.dl_list dt{padding-bottom:5px;font-weight:600;color:#000}
+.dl_list dd{padding-left:10px;}
+.table_form.no_bor table tr td{border:none;text-align: left;}
+
+/*<!--[202103 COOP] 추가-->*/
+.print_page .title_wrap{text-align:left}
+.print_page .title_wrap h1{margin:20px 0 5px;font-weight:600;font-size:18px;text-align:left;color:#000}
+.print_page .title_wrap h2{margin-bottom:10px;font-weight:600;font-size:17px;color:#000}
+.print_page .title_wrap h3{margin-bottom:5px;font-weight:600;font-size:15px;color:#000}
+.print_page .title_wrap h3 span{font-size:12px}
+.print_page .table_form table{margin-bottom:0}
+.print_page .table_form + .table_form{margin-top:10px}
+.print_page .table_form table tr th{font-weight:600;background:#ccc;color:#000}
+.print_page .table_form table tr td{font-weight:400;color:#333;text-align:left}
+.print_page,
+.print_page .table_form table tr th,
+.print_page .table_form table tr td{line-height:1.2}
+.print_page .table_form table tr td strong{color:#000}
+.print_page .table_form table,
+.sau_page_05.print_page .table_form table{border:2px solid #000}
+.print_page .table_form table + table tr td,
+.print_page .table_form table + table tr th,
+.print_page .table_form table + table tr td{border-top:0}
+.print_page .table_form table tr td.select_td{vertical-align:top}
+.print_page .table_form table tr td em{font-style:italic;color:#999}
+.print_page label + label{margin-left:20px}
+.print_page label .txt{display:inline-block;margin-left:5px}
+.print_page .str{font-weight:600;text-decoration:underline}
+.print_page .bottom_text{margin:15px 0}
+.print_page .bottom_text .desc,
+.print_page .bottom_text .date{text-align:center}
+.print_page .bottom_text .desc{font-weight:600;}
+.print_page .bottom_text .date{margin:10px 0;font-size:12px}
+.print_page .bottom_text .sign{text-align:right}
+.print_page .bottom_text .sign strong,
+.print_page .bottom_text .from{font-weight:600;font-size:18px;}
+.print_page .bottom_text .sign strong{margin-right:10px}
+.print_page .table_form table.tbl_calendar tr th,
+.print_page .table_form table.tbl_calendar tr td{padding:5px 0}
+.print_page .table_form .chk_score{padding:8px 0}
+
+.title_wrap.co h2{margin-bottom:15px;font-size:16px;font-weight:600;color:#000}
+.title_wrap.co h1{font-size:18px;font-weight:600;color:#000;text-align:center}
+.agreement_page{line-height:1.3}
+.agreement_wrap.dl_list dt,
+.agreement_page strong{font-weight:600;color:#000}
+.dl_list dt span{font-weight:400;color:#414141}
+.agreement_wrap.dl_list dd{text-indent:-14px;padding-left:25px}
+.agreement_wrap.dl_list dd.no_indent{text-indent:0;padding-left:10px}
+/*<!--//[202103 COOP] 추가-->*/�B�(B+      c���c���D��9c��1   [    O^partitionKey=%28https%2Ctukorea.ac.kr%29,:https://coop.tukorea.ac.kr/common/css/print.css necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 29 Nov 2022 05:03:45 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"9162-1632712837000"
+Last-Modified: Mon, 27 Sep 2021 03:20:37 GMT
+Content-Type: text/css
+Content-Length: 9162
+ original-response-headers Date: Tue, 29 Nov 2022 05:03:45 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"9162-1632712837000"
+Last-Modified: Mon, 27 Sep 2021 03:20:37 GMT
+Content-Type: text/css
+Content-Length: 9162
+Keep-Alive: timeout=5, max=84
+Connection: Keep-Alive
+ ctid 5 uncompressed-len 0 net-response-time-onstart 95 net-response-time-onstop 96   #�

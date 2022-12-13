@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///home/seowj/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/xterm-375-1.1.aarch64.rpm" added="2022-11-15T03:43:27.074192Z" modified="2022-11-15T03:43:27.074196Z" visited="2022-11-15T03:43:27.074193Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-rpm"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2022-11-15T03:43:27.074194Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/xterm-375-1.1.x86_64.rpm" added="2022-11-15T03:43:47.423277Z" modified="2022-11-15T03:43:47.423282Z" visited="2022-11-15T03:43:47.423278Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-rpm"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2022-11-15T03:43:47.423280Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/Test" added="2022-11-15T03:47:32.635933Z" modified="2022-11-15T04:27:53.005865Z" visited="2022-11-15T03:47:32.635933Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;org.gnome.Nautilus %u&apos;" modified="2022-11-15T04:27:53.005864Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C/endless-sky-0.9.16.1-1-omv4090.x86_64.rpm" added="2022-11-15T04:06:09.119498Z" modified="2022-11-15T04:06:09.119502Z" visited="2022-11-15T04:06:09.119499Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-rpm"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2022-11-15T04:06:09.119501Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/Test/endless-sky-0.9.16.1-1-omv4090.x86_64.rpm" added="2022-11-15T04:06:20.876381Z" modified="2022-11-15T04:06:20.876391Z" visited="2022-11-15T04:06:20.876382Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-rpm"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-software --local-filename %f&apos;" modified="2022-11-15T04:06:20.876387Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/MidExam/CProg/calc.c" added="2022-11-15T04:39:09.489421Z" modified="2022-11-15T04:39:09.489426Z" visited="2022-11-15T04:39:09.489422Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-csrc"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2022-11-15T04:39:09.489424Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/seowj/MidExam/CProg/add.c" added="2022-11-15T04:39:43.403216Z" modified="2022-11-15T04:39:43.403220Z" visited="2022-11-15T04:39:43.403217Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-csrc"/>
+        <bookmark:applications>
+          <bookmark:application name="org.gnome.Nautilus" exec="&apos;gnome-text-editor %U&apos;" modified="2022-11-15T04:39:43.403218Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>

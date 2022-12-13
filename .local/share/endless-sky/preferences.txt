@@ -1,0 +1,25 @@
+volume 0.5
+"window size" 817 543
+zoom 100
+"scroll speed" 60
+"view zoom" 4
+vsync 1
+"Automatic aiming" 1
+"Damaged fighters retreat" 1
+"Draw background haze" 1
+"Draw starfield" 1
+"Escorts expend ammo" 1
+"Escorts use ammo frugally" 1
+"Hide unexplored map regions" 1
+"Parallax background" 1
+"Render motion blur" 1
+"Ship outlines in shops" 1
+"Show escort systems on map" 1
+"Show hyperspace flash" 1
+"Show mini-map" 1
+"Show planet labels" 1
+"Show stored outfits on map" 1
+"Turrets focus fire" 1
+"Warning siren" 1
+fullscreen 0
+maximized 1

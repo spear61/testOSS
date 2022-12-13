@@ -1,0 +1,1694 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+    
+<!DOCTYPE HTML>
+<!--[if lt IE 7 ]><html dir="ltr" lang="ko" class="no-js ie ie6 lte7 lte8 lte9"><![endif]-->
+<!--[if IE 7 ]><html dir="ltr" lang="ko" class="no-js ie ie7 lte7 lte8 lte9"><![endif]--> 
+<!--[if IE 8 ]><html dir="ltr" lang="ko" class="no-js ie ie8 lte8 lte9"><![endif]-->
+<!--[if IE 9 ]><html dir="ltr" lang="ko" class="no-js ie ie9 lte9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html dir="ltr" lang="ko" class="no-js"><!--<![endif]-->
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			한국공학대학교
+			
+		</title>
+		<meta property="og:url" content="http://www.tukorea.co.kr/">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="한국공학대학교">
+		<meta property="og:description" content="누구나 인터넷으로부터 자유롭기를 희망하며">
+		<meta name="generator" content="한국공학대학교"> 
+
+ 
+		
+		
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+	
+
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta id="resResponsiveViewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1, user-scalable=yes">
+	
+	<meta name="apple-mobile-web-app-title" content="">
+	<meta name="format-detection" content="telephone=no" />
+
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta property="og:title" content="">
+	<meta property="og:site_name" content="">
+	<meta property="og:url" content="?">
+	<meta property="og:image" content="">
+	<meta property="og:description" content="">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="">
+	<meta name="twitter:url" content="?">
+	<meta name="twitter:image" content="">
+	<meta name="twitter:description" content="">
+	
+	<meta name="generator" content="K2Web Wizard">
+
+	<link rel="stylesheet" href="/Web-home/_UI/css/common/mCustomScrollbar.css">
+	<link rel="stylesheet" href="/Web-home/_UI/css/common/blockUI.css">
+	<link rel="stylesheet" href="/Web-home/_SITES/css/content/content.css">
+
+	
+
+	
+	
+	
+	
+		
+	
+	
+
+	
+	<link rel="stylesheet" href="/Web-home/_UI/css/guide/responsive.css">
+	
+		
+		
+		
+		
+			<!-- ONLY PC -->
+			<link href="/Web-home/_UI/css/guide/responsiveDesktop.css" rel="stylesheet">
+		
+	
+
+	
+	
+		
+		
+		
+		
+			<!-- ONLY PC -->
+			<link href="/sites/tukorea/style/css/site_contents_Desktop.css" rel="stylesheet">
+		
+	
+	
+
+	<link rel="stylesheet" href="/Web-home/_SITES/css/fnct/fnct.css">
+	
+		
+		
+		
+		
+			<!-- ONLY PC -->
+			<link href="/Web-home/_SITES/css/fnct/fnctDesktop.css" rel="stylesheet">
+		
+	
+
+	<script src="/Web-home/js/jquery-1.9.1.min.js"></script>
+	<script src="/Web-home/js/jquery-ui-1.12.1.min.js"></script>
+	<script src="/Web-home/js/jquery-migrate-1.4.1.min.js"></script>
+	<script src="/Web-home/js/jquery-mCustomScrollbar.3.0.3.min.js"></script>
+	<script src="/Web-home/js/common.js"></script>
+	
+	<!-- [SITES:S] -->
+	<script>
+		var urlPattern = ".do";
+		var defaultTextSiteId = "tukorea";
+		var ctxPath = "";
+	</script>
+
+	<!-- Slider -->
+	<script src="/sites/tukorea/style/js/vendor/slick.min.js?version=1"></script>
+	
+	
+		
+		
+			<!-- sub,popup,etc -->
+			<!-- Table Scroll -->
+			<script src="/sites/tukorea/style/js/vendor/niceScroll.min.js?version=1"></script>
+			<!-- Favorite 
+			<script src="/sites/tukorea/style/js/favorite.js?version=1"></script>-->
+		
+	
+
+	<!-- [M/S RESOURCE] -->
+	
+	<!-- [FNCT RESOURCE STYLE] -->
+	
+	<!-- [END] -->
+
+	
+		
+		
+			
+		
+	
+	
+	
+	<link href="/sites/tukorea/style_edit/css/style.css" rel="stylesheet">
+	
+	
+	
+	<script src="/sites/tukorea/style_edit/js/script.js"></script>
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+<!--[if lt IE 9]>
+
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="//ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+	<script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+
+<![endif]-->
+		
+		<style>
+		._fnctWrap{
+			overflow: hidden;
+			/*margin: 50px;*/
+		}
+		#divLoadBody {
+			display: none; 
+		}
+		</style>
+		
+
+
+<link rel="stylesheet" href="/Web-home/_UI/css/common/jquery-ui.css">
+<link rel="stylesheet" href="/Web-home/fnct/bbs/board_normal_b/css/style.css">
+
+
+    		<!--<script>
+    		/*function loaded(){  
+    			var element = document.getElementById('loading'); // 로딩 요소 
+    			element.parentNode.removeChild(element); // 요소 제거 
+   			} 
+   			// 로딩 이벤트에 등록 
+   			if(window.addEventListener){  
+   			      window.addEventListener('load', loaded, false);      
+   			    }else{
+   			      window.attachEvent('onload', loaded); 
+   			}
+   			 $(window).load(function(){
+   				  $('#loading').fadeOut(2000);
+			}); */
+			</script>
+			 <style>
+				#loading {
+					background: url("/Web-home/_UI/images/guide/loading.gif") no-repeat 50% 50% #fff;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					z-index: 9999;
+					text-indent: -5000px;
+				}
+			</style> -->
+ </head>
+<body class="_responsiveObj _langko">
+
+<!-- <div id="loading">
+L o a d i n g . . .    
+</div> -->
+
+	
+
+
+
+
+<div class="_fnctWrap">
+	<style>
+		li{list-style: none;}
+	</style>
+
+	
+
+	<form name="searchForm" method="post" action="/bbs/tukorea/376/artclList.do">
+		
+		<input type="hidden" name="layout" value="" />
+		<input type="hidden" id="bbsClSeq" name="bbsClSeq" value=""/>
+		<input type="hidden" id="bbsOpenWrdSeq" name="bbsOpenWrdSeq" value="" />
+		<input type="hidden" name="isViewMine" value="false">
+
+        <!-- Search -->
+		<div class="board-search">
+			<div class="form-search">
+				<fieldset>
+                    <legend>게시물 검색</legend>
+                    <div class="tbl-search">
+                        <div class="box-title">
+                            검색하기
+                        </div>
+                        <div class="box-sel">
+                            <select id="srchColumn" name="srchColumn" title="검색조건">
+                                
+                                    <option value="sj" >제목</option>
+                                
+                                    <option value="writer" >작성자</option>
+                                
+                            </select>
+                        </div>
+                        <div class="box-search">
+                            <input type="text" id="srchWrd" name="srchWrd" value="" placeholder="검색어를 입력해 주세요." onkeypress="if(event.keyCode == '13') jf_searchArtcl('srchWrd', this.value)" title="검색어입력">
+                            <input type="submit" value="검색">
+                        </div>
+                    </div>
+				</fieldset>
+			</div>
+		</div>
+
+		
+
+		
+
+		
+
+        <!-- RSS -->
+		<div class="board-rss">
+			<div class="util-search">
+				
+				
+				<p class="count-txt"><strong>4806</strong>건, 현재페이지: <span class="current">1</span>/481</p>
+			</div>
+		</div>
+	</form>
+
+	<form name="viewForm" method="post">
+		<input type="hidden" name="layout" value="" />
+		<input type="hidden" name="page" value="1">
+		<input type="hidden" name="srchColumn" value="">
+		<input type="hidden" name="srchWrd" value="">
+		<input type="hidden" name="bbsClSeq" value=""/>
+		<input type="hidden" name="bbsOpenWrdSeq" value="" />
+		<input type="hidden" name="rgsBgndeStr" value="">
+		<input type="hidden" name="rgsEnddeStr" value="">
+		<input type="hidden" name="isViewMine" value="false" />
+		<input type="hidden" name="password">
+
+		<h2 class="hidden">게시글 리스트</h2>
+
+        <!-- List Table -->
+        <div class="scroll-table">
+            <table class="board-table horizon1">
+                <caption>공지사항 - 일반공지</caption>
+                <colgroup>
+                    
+                    <col class="col-num">
+                    <col class="col-subject">
+                    <col class="col-ing">
+                    <col class="col-write">
+                    <col class="col-date">
+                    
+                    
+                    <col class="col-acess">
+                    
+                        <col class="col-file">
+                    
+                    
+                        
+                    
+                        
+                    
+                </colgroup>
+                <thead>
+                    <tr>
+                        
+                        <th class="th-num">번호</th>
+                        <th class="th-subject">제목</th>
+                        <th class="th-ing">처리상태</th>
+                        <th class="th-write">작성자</th>
+                        <th class="th-date">작성일</th>
+                        
+                        
+                        <th class="th-acess">조회수</th>
+                        
+                            <th class="th-file">첨부파일</th>
+                        
+                        
+                            
+                        
+                            
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/42703/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42703')">
+                                        
+                                        <strong>[학생생활복지센터]재학생 및 생활관 입주 예정자를 위한 무료 결핵검사 안내(11.29~30</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            학생생활복지센터
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.24</td>
+                                
+                                
+                                <td class="td-access">237</td>
+                                
+                                    <td class="td-file">0</td>
+                                
+                            </tr>
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/42603/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42603')">
+                                        
+                                        <strong>[학생생활복지센터]동계방학 생활관 입주생 모집 안내(11.25~12.1)</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            학생생활복지센터
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.18</td>
+                                
+                                
+                                <td class="td-access">413</td>
+                                
+                                    <td class="td-file">2</td>
+                                
+                            </tr>
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/42478/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42478')">
+                                        
+                                        <strong>[학생생활복지센터]생활관  및 복지매장 설문조사 안내(11.14~28)</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            학생생활복지센터
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.14</td>
+                                
+                                
+                                <td class="td-access">1087</td>
+                                
+                                    <td class="td-file">1</td>
+                                
+                            </tr>
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/42275/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42275')">
+                                        
+                                        <strong>2022년 2학기 셔틀버스 시간표(11.3,부분조정)</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            학생생활복지센터
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.03</td>
+                                
+                                
+                                <td class="td-access">576</td>
+                                
+                                    <td class="td-file">2</td>
+                                
+                            </tr>
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/41333/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '41333')">
+                                        
+                                        <strong>TUKOREA 무선랜 서비스 변경 안내 (2022.02.24~)</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            정보화센터
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.09.20</td>
+                                
+                                
+                                <td class="td-access">1122</td>
+                                
+                                    <td class="td-file">0</td>
+                                
+                            </tr>
+                        
+                            <tr class="notice ">
+                                
+                                <td class="td-num">
+                                    
+                                        
+                                        
+                                            <span>일반공지</span>
+                                        
+                                    
+                                </td>
+                                <td class="td-subject">
+                                    <a href="/bbs/tukorea/376/40427/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '40427')">
+                                        
+                                        <strong>[학생지원팀]2022년 2학기 사물함 신청 안내</strong>
+                                    </a>
+                                </td>
+                                <td class="td-ing"></td>
+                                <td class="td-write">
+                                    
+                                        
+                                            학생지원팀
+                                        
+                                        
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.08.18</td>
+                                
+                                
+                                <td class="td-access">784</td>
+                                
+                                    <td class="td-file">2</td>
+                                
+                            </tr>
+                        
+                    
+                    
+                    
+                        
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4806</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42779/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42779')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												[공모전] 의정부시 시 승격 60주년 기념 엠블럼·캐치프레이즈 공모전
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.29</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            10
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                1
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4805</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42742/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42742')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												2022 서울 빅데이터 포럼 개최
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.28</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            122
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4804</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42741/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42741')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												☆한국공대 홍보마스코트 출시 이벤트(~12.20)☆
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    홍보소통팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.28</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            422
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4803</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42740/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42740')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												☆한국공대 홍보소통채널 친구만들기 이벤트(~12.2)☆
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    홍보소통팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.28</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            207
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4802</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42738/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42738')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												[공모전]『달구벌미(米)소 레시피 영상 전국 공모』개최 안내
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.28</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            43
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4801</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42737/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42737')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												제2차 인권세미나 개최 안내
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.28</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            42
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4800</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42724/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42724')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												배곧2청소년문화의집 2022년 e스포츠데이 참가자모집
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.25</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            267
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4799</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42723/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42723')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												2022년 고독사 예방을 위한 사회적 고립가구 지원 및 대응체계 구축사업 성과공유회
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀 
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.25</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            80
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4798</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42710/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42710')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												KASFO 2022년도 카드뉴스 제10호 및 제11호 발간 안내
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생지원팀
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.24</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            85
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                2
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    <tr class="">
+                                
+                            
+                                
+                                <td class="td-num">4797</td>
+                                <td class="td-subject">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            <a href="/bbs/tukorea/376/42703/artclView.do" onclick="jf_viewArtcl('tukorea', '376', '42703')">
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                            <strong>
+												[학생생활복지센터]재학생 및 생활관 입주 예정자를 위한 무료 결핵검사 안내(11.29~30
+											</strong>
+                                            
+                                            
+                                                <span class="new">새글</span>
+                                            
+                                            
+                                        
+                                    
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            </a>
+                                        
+                                    
+                                </td>
+                                
+									
+									
+										<td class="td-ing"><span class="btn-ing">대기</span></td>
+									
+								
+                                <td class="td-write">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            
+                                                
+                                                    학생생활복지센터
+                                                
+                                                
+                                                
+                                            
+                                        
+                                    
+                                </td>
+                                <td class="td-date">2022.11.24</td>
+                                
+                                
+                                <td class="td-access">
+                                    
+                                        
+                                        
+                                        
+                                        
+                                            237
+                                        
+                                    
+                                </td>
+                                
+                                    <td class="td-file">
+                                        
+                                            
+                                            
+                                            
+                                            
+                                                0
+                                            
+                                        
+                                    </td>
+                                
+                                
+                                    
+                                
+                                    
+                                
+                            </tr>
+						
+                    
+                    
+                    
+                </tbody>
+            </table>
+        </div>
+	</form>
+
+	<form name="pageForm" method="post" action="/bbs/tukorea/376/artclList.do">
+		<input type="hidden" name="layout" value="" />
+		<input type="hidden" name="page" value="1">
+		<input type="hidden" name="srchColumn" value="">
+		<input type="hidden" name="srchWrd" value="">
+		<input type="hidden" name="bbsClSeq" value=""/>
+		<input type="hidden" name="bbsOpenWrdSeq" value="" />
+		<input type="hidden" name="rgsBgndeStr" value="">
+		<input type="hidden" name="rgsEnddeStr" value="">
+		<input type="hidden" name="isViewMine" value="false" />
+		<div class="_paging">
+	<div class="_inner">
+		<a href="javascript:page_link('1')" class="_first" title="처음 목록으로 이동">처음</a>
+<p class="_pageState"><span class="_curPage">1</span><span class="_totPage">481</span></p><ul>
+<li><strong title="현재 페이지">1</strong></li>
+<li><a href="javascript:page_link('2')" title="2페이지">2</a></li>
+<li><a href="javascript:page_link('3')" title="3페이지">3</a></li>
+<li><a href="javascript:page_link('4')" title="4페이지">4</a></li>
+<li><a href="javascript:page_link('5')" title="5페이지">5</a></li>
+<li><a href="javascript:page_link('6')" title="6페이지">6</a></li>
+<li><a href="javascript:page_link('7')" title="7페이지">7</a></li>
+<li><a href="javascript:page_link('8')" title="8페이지">8</a></li>
+<li><a href="javascript:page_link('9')" title="9페이지">9</a></li>
+<li><a href="javascript:page_link('10')" title="10페이지">10</a></li>
+</ul>
+<a href="javascript:page_link('2')" class="_listNext" title="다음 페이지">다음 페이지</a>
+<a href="javascript:page_link('11')" class="_next" title="다음 목록으로 이동">다음</a>
+<a href="javascript:page_link('481')" class="_last" title="마지막 목록으로 이동">끝</a>
+	</div>
+</div>
+
+	</form>
+
+    <!-- Button -->
+	<div class="board-button">
+		<div class="btn-mine">
+			
+		</div>
+		<div class="btn-control">
+			
+		</div>
+	</div>
+</div>
+
+
+
+
+<script defer src="/Web-home/fnct/bbs/board_normal_b/js/artclList.js"></script>
+
+
+
+
+
+</body>
+</html>
+
+
+���'~      c���c���D��O       c    O^partitionKey=%28https%2Ctukorea.ac.kr%29,:https://www.tukorea.ac.kr/bbs/tukorea/376/artclList.do? necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Strict-Transport-Security: max-age=15768000
+Cache-Control: no-cache
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+P3P: CP='CAO PSA CONi OTR OUR DEM ONL'
+Content-Language: ko-KR
+Date: Tue, 29 Nov 2022 05:02:53 GMT
+Content-Type: text/html; charset=UTF-8
+ original-response-headers Strict-Transport-Security: max-age=15768000
+Transfer-Encoding: chunked
+Cache-Control: no-cache
+Connection: keep-alive
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+P3P: CP='CAO PSA CONi OTR OUR DEM ONL'
+Content-Language: ko-KR
+Date: Tue, 29 Nov 2022 05:02:53 GMT
+Content-Type: text/html; charset=UTF-8
+ ctid 1 uncompressed-len 0 net-response-time-onstart 314 net-response-time-onstop 325   ��

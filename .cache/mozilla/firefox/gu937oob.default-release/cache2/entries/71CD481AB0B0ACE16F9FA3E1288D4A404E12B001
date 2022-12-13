@@ -1,0 +1,337 @@
+if( ! window.hancer )
+    window.hancer = new Object();
+
+if( ! window.hancer.cal )
+    window.hancer.cal = new Object();
+
+hancer.cal = function() {
+	this.m_ajax = new enview.util.Ajax();
+	this.m_contextPath = '';
+	this.m_themePath = '';
+	this.m_encodeingCallback = encodeURIComponent;
+}
+
+hancer.cal.prototype = {
+	m_contextPath : null,
+	m_themePath : null,
+	m_ajax : null,
+	m_calendars : [],
+	m_calendarIds : [],
+	m_calendar : null,
+	
+//	m_schedules : [],
+	m_start: null,
+	m_end: null,
+	
+	m_selectedEvent : null,
+	
+//	m_scheduleUsers : [],
+	m_calendarUsers : [],
+	
+	m_encodeingCallback : null,
+	
+	m_validateParams : ['name', 'nameList'],
+	
+	m_isJointModified : null,
+	
+	m_skin : 'default',
+	
+	m_emptyMessage : null,
+	
+	m_CalendarOption : {
+
+		// display
+		defaultView: 'month',
+		aspectRatio: 1,
+		header: {
+			left: '',
+			center: 'prev title next',
+			right: ''
+		},
+		weekends: true,
+		weekNumbers: false,
+		weekNumberCalculation: 'iso',
+		weekNumberTitle: 'W',
+		
+		// editing
+		//editable: false,
+		//disableDragging: false,
+		//disableResizing: false,
+		
+		allDayDefault: true,
+		ignoreTimezone: true,
+		
+		// event ajax
+		lazyFetching: true,
+		startParam: 'start',
+		endParam: 'end',
+		
+		// time formats
+		titleFormat: {
+			month: 'yyyy. MMMM',
+			week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
+			day: 'dddd, MMM d, yyyy'
+		},
+		columnFormat: {
+			month: 'ddd',
+			week: 'ddd M/d',
+			day: 'dddd M/d'
+		},
+		timeFormat: { // for event elements
+			'': 'h(:mm)t' // default
+		},
+		
+		// locale
+		isRTL: false,
+		firstDay: 0,
+		monthNames: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+		monthNamesShort: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+		dayNames: ['일','월','화','수','목','금','토'],
+		dayNamesShort: ['일','월','화','수','목','금','토'],
+		buttonText: {
+			prev: "<a href='#'><img converURL='themePath_src' id='prevMonthButton' src='@themePath@/images/main/pre_btn.gif' alt='이전달' /></a>",
+			next: "<a href='#'><img converURL='themePath_src' id='nextMonthButton' src='@themePath@/images/main/next_btn.gif' alt='다음달' /></a>",
+			prevYear: "<span class='fc-text-arrow'>&laquo;</span>",
+			nextYear: "<span class='fc-text-arrow'>&raquo;</span>",
+			today: 'today',
+			month: 'month',
+			week: 'week',
+			day: 'day',
+			more: "<a class='btn_rgray24' converURL='contextPath_href' href='@contextPath@/portal/default/link/top_left/schedule.page'><span id='moreButton'>&nbsp;</span></a>"
+		},
+		
+		// jquery-ui theming
+		theme: false,
+		buttonIcons: {
+			prev: 'circle-triangle-w',
+			next: 'circle-triangle-e'
+		},
+		
+		/*selectable: false,*/
+		unselectAuto: true,
+		
+		dropAccept: '*',
+		
+		handleWindowResize: true,
+		
+		allDayText: 'all-day',
+		axisFormat: 'h(:mm)tt',
+		height : "parent"
+		
+	},
+	
+	m_viewName : null,
+	
+	m_isCalListOpen : false,
+	m_calSliderFixed : false,
+	
+	init : function () {
+		if(!document.getElementById('calendar')) return;
+		
+		var viewName = $('#viewName');
+		if(viewName) this.m_viewName = viewName.val();
+		
+		this.m_calendarIds = [];
+		this.m_calendars = [];
+		this.m_schedules = [];
+		enMiniCal.m_timeFormat = { '': 'hh:mmt' };
+		enMiniCal.initCalendar();
+		enMiniCal.getScheduleData(new Date());
+	},
+	
+	renderEvents : function(calendarId){
+		var events = [];
+		var isOwner = $('#' + calendarId + '_isOwner').val();
+		var isDefault = $('#' + calendarId + '_isDefault').val();
+		var isPublic = $('#' + calendarId + '_isPublic').val();
+		var param = 'calendarId=' + calendarId;
+		param += '&isDefault=' + isDefault;
+		param += '&isOwner=' + isOwner;
+		param += '&isPublic=' + isPublic;
+		param += '&start=' + enMiniCal.m_start;
+		param += '&end=' + enMiniCal.m_end;
+		param += '&dummy=' + Math.random()*1000;
+		param += '&isUserPublic=' + $('#' + calendarId + '_isUserPublic').val();
+		this.m_ajax.send("POST", enMiniCal.m_contextPath + "/calendar/scheduleList.hanc", param, false, {
+			success: function(data){
+				events = data.Data;
+			},
+			error: function(data, e){
+				//alert(data.Reason + '\n잠시 후에 다시 시도 해주십시오.');
+			}
+		});
+		return events;
+	},
+	
+	initCalendar : function(){
+		if(!document.getElementById('calendar')) return;
+		
+		$('input[name=calendarId]').each(function(index){
+			var $this = $(this);
+			enMiniCal.m_calendarIds[index] = $this.val();
+		});
+		
+		$('#calendar').fullCalendar({
+			//options setting
+			timeFormat: enMiniCal.m_CalendarOption.timeFormat,
+			defaultView: enMiniCal.m_CalendarOption.defaultView,
+			header: enMiniCal.m_CalendarOption.header,
+			titleFormat: enMiniCal.m_CalendarOption.titleFormat,
+			monthNames: enMiniCal.m_CalendarOption.monthNames,
+			monthNamesShort: enMiniCal.m_CalendarOption.monthNamesShort,
+			dayNames: enMiniCal.m_CalendarOption.dayNames,
+			dayNamesShort: enMiniCal.m_CalendarOption.dayNamesShort,
+			buttonText: enMiniCal.m_CalendarOption.buttonText,
+			allDayText: enMiniCal.m_CalendarOption.allDayText,
+			axisFormat: enMiniCal.m_CalendarOption.axisFormat,
+					
+			editable: true,
+			events : function(start, end, callback) {
+				var year = $('#calendar').fullCalendar('getDate').format('yyyy-MM').split('-')[0];
+				var month = $('#calendar').fullCalendar('getDate').format('yyyy-MM').split('-')[1];
+				$.ajax({
+					type: "GET",
+					url: $('#monthURL').val(),
+					data: "year=" + year + "&month=" + month,
+					dataType : "json",
+					success: function(json){
+						var dates = $('#calendar .fc-day');
+						var today = new Date().format('yyyy-MM-dd');
+						enMiniCal.getScheduleData(new Date(year + "-" + month + "-01"));
+						dates.each(function(){
+							var $this = $(this);
+							var currentDate = new Date($this.attr('data-date'));
+							if(today == currentDate.format('yyyy-MM-dd')) {
+								$this.addClass('fc-day-selected').addClass('today');
+								$this.find('.fc-day-number').addClass('fc-day-selected');
+							}
+							var scheduleCountList = json.scheduleCountList;
+							if (scheduleCountList != null) {
+								for(var i = 0; i < scheduleCountList.length; i++){
+									if($this.attr('click-binded') == 'T') break;
+									var schedule = scheduleCountList[i];
+									var startDate = new Date(schedule.startDate);
+									var endDate = new Date(schedule.endDate);
+									if(startDate <= currentDate && currentDate <= endDate){
+										//$this.attr('click-binded', 'T');
+										$this.addClass('fc-day-exists-schedule');
+										$this.find('.fc-day-number').addClass('fc-day-exists-schedule');
+										/*$this.click(function(){
+											$('#calendar .fc-day-selected').removeClass('fc-day-selected').removeClass('today');
+											$this.addClass('fc-day-selected').addClass('today');
+											$this.find('.fc-day-number').addClass('fc-day-selected');
+											enMiniCal.getScheduleData(new Date($this.attr('data-date')));
+										});*/
+									}
+								}
+							}
+						});
+					}
+				});
+	    	}
+		});
+	},
+	
+	getScheduleData : function(currentDate, calId){
+		var year = currentDate.format('yyyy');
+		var month = currentDate.format('MM');
+		var date = currentDate.format('dd');
+		
+		var param = {
+				year : year
+				, month : month
+				, date : date
+				, calendarId : (calId == null || calId == undefined) ? "" : calId
+		}
+		$.ajax({
+			type: "GET",
+			url: $('#dateURL').val(),
+			data: param,
+			dataType : "json",
+			success: function(json){
+				var html1 = "";
+				var html2 = "";
+				if (json.personalScheduleList.length > 0) {
+					$('#personalScheduleList').removeClass("no_data");
+					$(json.personalScheduleList).each(function (i, data) {
+						html1 += "<li>" +
+									"<span class=\"title\">" +
+										"<a href=\"" + enMiniCal.m_contextPath + "/portal/default/menu/mypage/calendar.page\">" + this.name +
+										"</a>" +
+									"</span>" +
+									"<span class=\"time\">" +
+										((this.allday == 1)?this.startDatim.replace(" 00:00", "") : this.startDatim) + " ~ " + ((this.allday == 1)?this.endDatim.replace(" 00:00", ""):this.endDatim) +
+									"</span>" +
+								"</li>";
+					});
+				} else {
+					$('#personalScheduleList').addClass("no_data");
+					html1 += "<li><p>등록된<br/>개인일정이 없습니다.</p></li>";
+				}
+				$('#personalScheduleList').html(html1);
+				
+				if (json.academicScheduleList.length > 0) {
+					$('#academicScheduleList').removeClass("no_data");
+					$(json.academicScheduleList).each(function (i, data) {
+						html2 += "<li>" +
+									"<span class=\"title\">" +
+										"<a href=\"" + enMiniCal.m_contextPath + "/portal/default/menu/mypage/calendar.page\">" + this.name +
+										"</a>" +
+									"</span>" +
+									"<span class=\"time\">" +
+										((this.allday == 1)?this.startDatim.replace(" 00:00", "") : this.startDatim) + " ~ " + ((this.allday == 1)?this.endDatim.replace(" 00:00", ""):this.endDatim) +
+									"</span>" +
+								"</li>";
+					});
+				} else {
+					$('#academicScheduleList').addClass("no_data")
+					html2 += "<li><p>등록된<br/>학사력이 없습니다.</p></li>";
+				}
+				$('#academicScheduleList').html(html2);
+			}
+		});
+	},
+	
+	getMessage : function() {
+		var retMsg = null;
+		var arr = arguments;
+		if (arr != null && arr.length > 0) {
+			if (!portalPage) {
+				portalPage = new enview.portal.Page();
+			}
+			retMsg = portalPage.getMessageResource (arr[0]);
+			if(retMsg == null) {
+				alert(arr[0]);
+				return "";
+			}
+			for (var i=0; i<arr.length; i++) {
+				var pattern = "{" + i + "}";
+				retMsg = retMsg.replace(pattern, arr[i+1]);
+			}
+		}
+		return retMsg;
+	},
+	
+	autoResize : function() {
+		if(parent.autoresize_iframe_portlets) parent.autoresize_iframe_portlets();
+	}
+}
+
+var enMiniCal = new hancer.cal();
+
+$(document).ready(function(){
+	enMiniCal.init();
+});
+��}�      c���c���D��4c��$   y    O^partitionKey=%28https%2Ctukorea.ac.kr%29,:https://portal.tukorea.ac.kr/face/javascript/portlet/calendar/minicalendar.js necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAAAAgAAAAAAAAAAAAAAAAAAAAEANwFmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAbEMIIGwDCCBaigAwIBAgIMPPOYFkXSamY0rkocMA0GCSqGSIb3DQEBCwUAMFAxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSYwJAYDVQQDEx1HbG9iYWxTaWduIFJTQSBPViBTU0wgQ0EgMjAxODAeFw0yMjAxMTMwMDM4NDJaFw0yMzAyMTQwMDM4NDJaMIGIMQswCQYDVQQGEwJLUjEUMBIGA1UECAwLR3llb25nZ2ktZG8xEzARBgNVBAcMClNpaGV1bmctc2kxETAPBgNVBAsMCERldiBUZWFtMSUwIwYDVQQKDBxLT1JFQSBQT0xZVEVDSE5JQyBVTklWRVJTSVRZMRQwEgYDVQQDDAsqLmtwdS5hYy5rcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOT4Uacy1PpsPggn7r6Vn36dH434PKQDnmuw9YRjLM2MejMzrv2c1rvVXJd7Usy4Vn0xIbsXJm5Qs2sxHZM+FIWMvt/tA9cXLet/qI9+d/UsCI5Z4KRmC8OKSXf+o2/bZflWFq3BbUaiu36nNZJEX9Okob3v9oBgA7AB2fKGFbqIzIPzpt/I941oT8/OmraUA/ll+tcoAPg/BU9UVeBChdNqoCOUtq6gRnFpNL9wUGuoNEB59XX8hW4CRXycofPXeWh0qXAzdzJA0aAig1y97qrfr4lxAR/rudjPGHnXo4HCcVfqDfWrGcDYfSjI7/CBHPMtFWNBH8o7fwv+iMv2f48CAwEAAaOCA18wggNbMA4GA1UdDwEB/wQEAwIFoDCBjgYIKwYBBQUHAQEEgYEwfzBEBggrBgEFBQcwAoY4aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3Nyc2FvdnNzbGNhMjAxOC5jcnQwNwYIKwYBBQUHMAGGK2h0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzcnNhb3Zzc2xjYTIwMTgwVgYDVR0gBE8wTTBBBgkrBgEEAaAyARQwNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCAYGZ4EMAQICMAkGA1UdEwQCMAAwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc3JzYW92c3NsY2EyMDE4LmNybDAyBgNVHREEKzApggsqLmtwdS5hYy5rcoIPKi50dWtvcmVhLmFjLmtygglrcHUuYWMua3IwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFPjvf/LNeGeo3m+PJI2I8YcDArPrMB0GA1UdDgQWBBQQJUEnxPqrZW8WwrtAKg/MxWHzCjCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFpAHYA6D7Q2j71BjUy51covIlryQPTy9ERa+zraeF3fW0GvW4AAAF+UN9mHQAABAMARzBFAiBQVBCyUXdZ5UpcBWA0k5mVj2wgH1T89iXNJv5An0vWvgIhANIShZKFvfoq38UnlPmlGC4/n5g5rsvgzqqrrh/xBDtWAHcAb1N2rDHwMRnYmQCkURX/dxUcEdkCwQApBo2yCJo32RMAAAF+UN9kVgAABAMASDBGAiEAkDrCr9sWoxPHt7EnloD2AHsIPQ3hxw6kvg+M8Sl3/BsCIQCtkosWP+cmVckiF+bbpqhncPaR+unna3PCdu4UQ4/llAB2ADXPGRu/sWxXvw+tTG1Cy7u2JyAmUeo/4SrvqAPDO9ZMAAABflDfZZwAAAQDAEcwRQIgX0UgYtRsryT6zjPoZTmb2Xyuht94HiwsX+OOe1o3txkCIQCrIuVktWpqGjkYdleGFDKjncpE22+7gI95CQiavQ6qGTANBgkqhkiG9w0BAQsFAAOCAQEAoOVmtxAasDBp4NMEnlR1rzhJK0FjmZ/JMSd3WaCjhOz/lqfBmQ8EpDvZFY8fW4MMGb9a05vf/ZUKXInOyahS7iIFTH1+BNzQ8decqq0iVIeVKclbqHKy6I8/mOGP9SohZTps+GibS0zZ66SnK4XV3WTrkeKc+qfaBR4OwTopfUN8Gm4KjwhQoXEouYx+Ikiw2jkfSPl/y053e+Lp4lM5U+zpZmj/VbLaUBnAIgNk03gIe4uao9XQo1C0K/PqBTgR/Izp1hZhL8wFETgwI4Bx3SUnKSHjndwVyS+8DICQwo+OhyeuHMrxz0iY9u7aVTfYsByblwYpv1Kq1v5Adsp7hRMBAAQAAAAAAQEAAAAAAAAGeDI1NTE5AAAADlJTQS1QU1MtU0hBMjU2AANmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAbEMIIGwDCCBaigAwIBAgIMPPOYFkXSamY0rkocMA0GCSqGSIb3DQEBCwUAMFAxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSYwJAYDVQQDEx1HbG9iYWxTaWduIFJTQSBPViBTU0wgQ0EgMjAxODAeFw0yMjAxMTMwMDM4NDJaFw0yMzAyMTQwMDM4NDJaMIGIMQswCQYDVQQGEwJLUjEUMBIGA1UECAwLR3llb25nZ2ktZG8xEzARBgNVBAcMClNpaGV1bmctc2kxETAPBgNVBAsMCERldiBUZWFtMSUwIwYDVQQKDBxLT1JFQSBQT0xZVEVDSE5JQyBVTklWRVJTSVRZMRQwEgYDVQQDDAsqLmtwdS5hYy5rcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOT4Uacy1PpsPggn7r6Vn36dH434PKQDnmuw9YRjLM2MejMzrv2c1rvVXJd7Usy4Vn0xIbsXJm5Qs2sxHZM+FIWMvt/tA9cXLet/qI9+d/UsCI5Z4KRmC8OKSXf+o2/bZflWFq3BbUaiu36nNZJEX9Okob3v9oBgA7AB2fKGFbqIzIPzpt/I941oT8/OmraUA/ll+tcoAPg/BU9UVeBChdNqoCOUtq6gRnFpNL9wUGuoNEB59XX8hW4CRXycofPXeWh0qXAzdzJA0aAig1y97qrfr4lxAR/rudjPGHnXo4HCcVfqDfWrGcDYfSjI7/CBHPMtFWNBH8o7fwv+iMv2f48CAwEAAaOCA18wggNbMA4GA1UdDwEB/wQEAwIFoDCBjgYIKwYBBQUHAQEEgYEwfzBEBggrBgEFBQcwAoY4aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3Nyc2FvdnNzbGNhMjAxOC5jcnQwNwYIKwYBBQUHMAGGK2h0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzcnNhb3Zzc2xjYTIwMTgwVgYDVR0gBE8wTTBBBgkrBgEEAaAyARQwNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCAYGZ4EMAQICMAkGA1UdEwQCMAAwPwYDVR0fBDgwNjA0oDKgMIYuaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc3JzYW92c3NsY2EyMDE4LmNybDAyBgNVHREEKzApggsqLmtwdS5hYy5rcoIPKi50dWtvcmVhLmFjLmtygglrcHUuYWMua3IwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB8GA1UdIwQYMBaAFPjvf/LNeGeo3m+PJI2I8YcDArPrMB0GA1UdDgQWBBQQJUEnxPqrZW8WwrtAKg/MxWHzCjCCAX8GCisGAQQB1nkCBAIEggFvBIIBawFpAHYA6D7Q2j71BjUy51covIlryQPTy9ERa+zraeF3fW0GvW4AAAF+UN9mHQAABAMARzBFAiBQVBCyUXdZ5UpcBWA0k5mVj2wgH1T89iXNJv5An0vWvgIhANIShZKFvfoq38UnlPmlGC4/n5g5rsvgzqqrrh/xBDtWAHcAb1N2rDHwMRnYmQCkURX/dxUcEdkCwQApBo2yCJo32RMAAAF+UN9kVgAABAMASDBGAiEAkDrCr9sWoxPHt7EnloD2AHsIPQ3hxw6kvg+M8Sl3/BsCIQCtkosWP+cmVckiF+bbpqhncPaR+unna3PCdu4UQ4/llAB2ADXPGRu/sWxXvw+tTG1Cy7u2JyAmUeo/4SrvqAPDO9ZMAAABflDfZZwAAAQDAEcwRQIgX0UgYtRsryT6zjPoZTmb2Xyuht94HiwsX+OOe1o3txkCIQCrIuVktWpqGjkYdleGFDKjncpE22+7gI95CQiavQ6qGTANBgkqhkiG9w0BAQsFAAOCAQEAoOVmtxAasDBp4NMEnlR1rzhJK0FjmZ/JMSd3WaCjhOz/lqfBmQ8EpDvZFY8fW4MMGb9a05vf/ZUKXInOyahS7iIFTH1+BNzQ8decqq0iVIeVKclbqHKy6I8/mOGP9SohZTps+GibS0zZ66SnK4XV3WTrkeKc+qfaBR4OwTopfUN8Gm4KjwhQoXEouYx+Ikiw2jkfSPl/y053e+Lp4lM5U+zpZmj/VbLaUBnAIgNk03gIe4uao9XQo1C0K/PqBTgR/Izp1hZhL8wFETgwI4Bx3SUnKSHjndwVyS+8DICQwo+OhyeuHMrxz0iY9u7aVTfYsByblwYpv1Kq1v5Adsp7hWYKMiaRXE/7uyCJhaYy3wW9w5eaVCJM1YWJaWtuluqDAAAAAAAABFIwggROMIIDNqADAgECAg0B7l8iHfxiO9QzOoVXMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTE4MTEyMTAwMDAwMFoXDTI4MTEyMTAwMDAwMFowUDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExJjAkBgNVBAMTHUdsb2JhbFNpZ24gUlNBIE9WIFNTTCBDQSAyMDE4MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp1rJ1QwYIQAj1ZcP667dXGhra49QYBN6gcuX7o6KYZRLJnn2BKcq+6TaVrvuoKTwe4p/VR9Hk2ENbnFROiUkCC+M4feJ1pLPr7OnPzDttd8hrv71RBf92GPZL9OBWmtf00ewrPKrOyR5Tx/HLuq5FTp8GExps7UgWQleKcNj5i5GW6qUkEkOufD1SqEJL3w0TdC8AMUGVXkGzqLQEPFIQ+i5WrWVVb0x0hs9hr6h7A0S2yyZJK1Hwm8D5npwtXDMzScspYyOwhg8kskuc28GEFaTQKqjxVL75cUF1mloXAa57lGJ4YoOQU2bkpAKiekWa+/vdb56RrjjR4odHC6nTwIDAQABo4IBKTCCASUwDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFPjvf/LNeGeo3m+PJI2I8YcDArPrMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MD4GCCsGAQUFBwEBBDIwMDAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3RyMzA2BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjMuY3JsMEcGA1UdIARAMD4wPAYEVR0gADA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAmZDILV9CitQLZtuYA3MR1IiGUihTivut3/1zjjpnBNvDUxRwFAl8w+D41xyYGqLEPtvpAOPKcLLxIjAhVtvTrXlegVgLbRSANfVvXR3rmkcF/1mNALFA2pCYlhq6bG1/jPWzgN+MZHM2lnl5aXTqv/ieAY+glWmN6YS66eXUiDjbeDuY0DZ7KbDSUhiQ3lJDAK5qJ8gUnoaVrOGAMTB+miW7i6wEI6aZAOjx0ibsD347iiuSOBMdj4bNhlJH5jR8W6QCPophfCJ2U1qUUzOGuJKocq+h+VKHHzGl/LCBVy/N9M7c9iTPp+I0kGid/qrxqZoSzJvAxsOopbAhft5I9mYKMiaRXE/7uyCJhaYy3wW9w5eaVCJM1YWJaWtuluqDAAAAAAAAA2MwggNfMIICR6ADAgECAgsEAAAAAAEhWFMIojANBgkqhkiG9w0BAQsFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UEAxMKR2xvYmFsU2lnbjAeFw0wOTAzMTgxMDAwMDBaFw0yOTAzMTgxMDAwMDBaMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzCV2kHkGeCIW9cCDtoTKKJ79BXYRxa2IcvxGAkPHsoqdBF8kyy5L4WCCRuFSqwyBR3Bs3WTR6/Usow+CPQwrrpfXthSGEHm7OxOAd4wI4UnSamIvH176lmjfiSeVOJ8G1z7JyyZZDXPesMjpJg6DFcbvW4vSBGDKSaYo9mk79svIKJHlnYphVzesdBTcdOA67nIvLpz70Lu/9T0A4QYz6IIrrlOmOhZzjN1BDiA6wLSnoemyT5AuMmDpV8u5BJJoaOU4JmB1sp93/5EU764gSfytQBVI0QIxYRleuJfvrXe3ZJp6v1/BE++bYvsNbOBUaRapA9pu6YOTcXbGaYWCFwIDAQABo0IwQDAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUj/BLf6guRSSuTVD6Y5qL3uLdG7wwDQYJKoZIhvcNAQELBQADggEBAEtA28BQqv7IDO/3llRFSbuWAAlBrLMThoYoBzPKa+Z0uboALa6kCtP18fEPir9zZ0qDx0R7eOCvbmxvAymOMzlFw47kuVdsqvwSluxTxi3kJGy5lGP73FNoZ1Y+g7jPNSHDyWj+ztrCU6rMkIrp8F1GjJXdelgoGi8d3s0AN0GP7URt11Mol37zZwQeFdeKlrTT3kwnpEwbc3N29BeZwh96DuMtCK0KHCz/PKtVDg+Rfjbrw1dJvuEuLXxgi8NBURMjnc73MmuUAaiZ5ywzHzo7JdKGQM47LIZ4yWEvFLru21Vv34TuBQlNvSjYcs7TYlBlHuuSl4Mx2bO1ykdYP18AAAABAAAAAAEAAAAAAFR0bHNmbGFnczB4MDAwMDAwMDA6cG9ydGFsLnR1a29yZWEuYWMua3I6NDQzXnBhcnRpdGlvbktleT0lMjhodHRwcyUyQ3R1a29yZWEuYWMua3IlMjk= request-method GET response-head HTTP/1.1 200 OK
+ETag: W/"9650-1501141283000"
+Date: Tue, 29 Nov 2022 05:03:33 GMT
+Last-Modified: Thu, 27 Jul 2017 07:41:23 GMT
+Content-Type: text/javascript;charset=utf-8
+Content-Length: 9650
+ original-response-headers ETag: W/"9650-1501141283000"
+Date: Tue, 29 Nov 2022 05:03:33 GMT
+Last-Modified: Thu, 27 Jul 2017 07:41:23 GMT
+Connection: keep-alive
+Content-Type: text/javascript;charset=utf-8
+Content-Length: 9650
+ ctid 2 uncompressed-len 0 net-response-time-onstart 391 net-response-time-onstop 392   %�

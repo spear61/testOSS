@@ -1,0 +1,369 @@
+var ncsPopFn = {
+	//선택된 운영계획서 주차
+	"ncsW":null,
+	//운영계획서 주차 선택시 저장
+	"ncsWfn":function(ncsW){
+		ncsPopFn.ncsW = ncsW;
+	},
+
+	//운영계획서 주차선택 유무 체크
+	"ncsWmsg":function(){
+		if(ncsPopFn.ncsW != null){
+			return false;
+		}else{
+			$.fun.alert({
+				"content":"주차를 선택해주세요."
+			});
+			return true;
+		}
+	},
+	"ncsInput":function(jidSeq,ncsType,viewType){
+		var width = 1024;
+		if(viewType == '1') width = 512;
+
+		var url = "/ncs/ncs.do"
+
+		var data=$("#writeForm").serializeObject();
+		if(data.jidSeq == null)
+			data = {"jidSeq":jidSeq,"ncsType":ncsType,"viewType":viewType};
+		$.fun.ajax({
+			"url":url,
+			"data":data,
+			"async":false,
+			"success":function(data){
+				if($(data).find("input[name='ncsView']").val() == "N"){
+					$.fun.layout({
+						"id":"comp_ncs",
+						"title":"수행준거",
+						"subTitle":"수행준거",
+						"width":1000,
+						"content":$(data),
+						"buttons":	{
+							"저장":function(){
+								ncsPopFn.ncsProc();
+							},
+							"닫기":function(){
+								$(this).dialog('destroy').remove();
+							}
+						}
+					});
+				}else{
+					$.fun.layout({
+						"id":"comp_ncs",
+						"title":"수행준거",
+						"subTitle":"수행준거",
+						"width":width,
+						"content":$(data),
+						"buttons":	{
+							"닫기":function(){
+								$(this).dialog('destroy').remove();
+							}
+						}
+					});
+				}
+
+			}
+		});
+	},
+	"ncsStart":function(obj){
+		$(obj).parent().parent().find('input[name="selectVal"]').val($(obj).val());
+		ncsPopFn.exNcsList($(obj).val(), $(obj).parent().next().next().find('div'));
+		ncsPopFn.changeDate($(obj).val(), $(obj).parent().next().next().next().find('div'));
+	},
+	"exNcsList":function(selectVal, obj){
+		var data=$("#frmNcs").serializeArray();
+		data.push({name:'selectVal', value:selectVal});
+		$(".lodingData").text("데이터 로딩중입니다...")
+		$.fun.ajax({
+			"url":"/ncs/exNcsList.do",
+			"data":data,
+			"success":function(data){
+				$(obj).html(data);
+				$('[name="exNcsList"]').each(function(){
+					$.fun.rowspan(this, 0);
+					$.fun.rowspan(this, 1);
+					$.fun.rowspan(this, 2);
+					$.fun.rowspan(this, 3);
+				});
+			}
+		});
+	},
+	"changeDate":function(selectVal, obj){
+		console.log("/changeDate/");
+		console.log(selectVal);
+		var data=$("#frmNcs").serializeArray();
+		data.push({name:'selectVal', value:selectVal});
+		var deptCodeIf = selectVal.substring(0,7);
+		data.push({name:'deptCodeIf',value:deptCodeIf});
+		console.log(deptCodeIf);
+
+		$.fun.ajax({
+			"url":"/ncs/changeDate.do",
+			"data":data,
+			"success":function(data){
+				$(obj).html(data);
+
+			}
+		});
+	},
+	"ncsWeekAdd" : function(req) {
+		var weekCnt = $(req).parents("table").find("#JS_ADD_PLAN").find(".planRow").length + 1;
+		var rowCopy = $(req).parents("table").find("#JS_ADD_PLAN").find(".planRow:eq(0)").clone();
+		rowCopy.find("th").find("label").attr("for","wp"+weekCnt);
+		rowCopy.find("th").find("label").text(weekCnt + "주차");
+		rowCopy.find("th").find("input[name='wp[]']").attr("id","wp"+weekCnt);
+		rowCopy.find("th").find("input[name='wp[]']").attr("checked",false);
+		rowCopy.find("th").find("input[name='wp[]']").val(weekCnt);
+
+		rowCopy.find("th").find("input[name^='week']").val(weekCnt);
+		rowCopy.find("th").find(".ncsWeekDel").attr("onclick","ncsPopFn.ncsWeekDel('"+ weekCnt+"')");
+		rowCopy.find("td").find("tbody").html("");
+		$(req).parents("table").find("#JS_ADD_PLAN").append(rowCopy);
+
+
+	},
+	"ncsWeekDel" : function(req) {
+		var weekCnt = $(req).parents("table").find("#JS_ADD_PLAN").find(".planRow").length-1;
+		if(weekCnt == 0) {
+			$.fun.alert({
+				"content":"더이상 삭제 하실 수 없습니다."
+			});
+		} else {
+			$(req).parents("table").find("#JS_ADD_PLAN").find(".planRow:eq(" + weekCnt + ")").remove();
+		}
+//		$("#JS_ADD_PLAN").find(".planRow:eq("+(cnt-1)+")").remove();
+//		$("#JS_ADD_PLAN").find(".planRow").each(function(i){
+//			$(this).find("th").find("label").attr("for","wp"+ (i+1));
+//			$(this).find("th").find("label").text( (i+1) + "주차");
+//			$(this).find("th").find("input[name='wp[]']").attr("id","wp"+ (i+1));
+//			$(this).find("th").find("input[name='wp[]']").val( (i+1));
+//			$(this).find("th").find("input[name^='week']").val( (i+1));
+//			$(this).find("th").find(".ncsWeekDel").attr("onclick","ncsPopFn.ncsWeekDel('"+  (i+1) +"')");
+//			$(this).find("td").find("input[name^='ncsCode_']").attr("name","ncsCode_" + (i+1) + $(this).find("td").find("input[name='ncsCodeMid']").val() + "[]")
+//			$(this).find("td").find("input[name^='ncsText_']").attr("name","ncsText_" + (i+1) + $(this).find("td").find("input[name='ncsCodeMid']").val() + "[]")
+//		});
+
+
+	},
+	"ncsShjgList":function(selectVal, comptUnitEleNo, jidSeq){
+		$.fun.ajax({
+			"url":"/ncs/ncsShjgList.do",
+			"data":{"selectVal":selectVal, "comptUnitEleNo":comptUnitEleNo, "jidSeq":jidSeq },
+			"success":function(data){
+				$.fun.layout({
+					"id":"ncsShjgListLayout",
+					"title":"수행준거",
+					"subTitle":"수행준거",
+					"width":600,
+					"content":$(data)
+				});
+			}
+		});
+	},
+	//수행준거 추가
+	"ncsAdd":function(selectVal, comptUnitEleNo, obj, type){
+		var selectVal = $(ncsPopFn.ncsW).closest("div").parent().prev().prev().prev().children().val();
+		if(ncsPopFn.ncsWmsg()) return;
+		if(type == "duty") var text = $(obj).prev().prev().prev().val();
+		else var text = $(obj).parent().prev().prev().text();
+		var seq = $(obj).attr("id").replace("addBtn", "");
+		var str = "";
+		str = str + '<tr><td>';
+		str = str + '<input type="hidden" name="ncsCode_' + $(ncsPopFn.ncsW).val() + selectVal + '[]" value="' + comptUnitEleNo + '"/>';
+		str = str + '<input type="hidden" name="ncsText_' + $(ncsPopFn.ncsW).val() + selectVal + '[]" value="' + text + '"/>' + text + '</td>';
+		str = str + '<td><a href="javascript:;" class="btn_inner addBtn" onclick="ncsPopFn.ncsShjgList(\'' + selectVal + '\', \'' + comptUnitEleNo + '\');"><span class="btn_txt" class="last">수행준거</span></a></td>';
+		str = str + '<td class="tac last"><a href="javascript:;" class="btn_inner ncsDel" onclick="$(this).parent().parent().remove();"><span class="btn_txt" class="last">삭제</span></a></td></tr>';
+		$(ncsPopFn.ncsW).parent().next().find("tbody").append(str);
+		return false;
+	},
+	//수행준거 저장
+	"ncsProc":function(){
+		var form=document.frmNcs;
+		if(!$(form).validate()) return false;
+		var max = $(".choice").find("tbody").length;
+		var a = 0;
+		$(".choice").find("tbody").each(function(){
+			if( $(this).find("tr").length > 0) {
+				a= a+1;
+			};
+		});
+		if(max > a){
+			$.fun.alert({
+				"content":"운영계획서의 모든 주차를 등록해주세요."
+			});
+			return false;
+		}
+
+		var data=$("#frmNcs").serializeArray();
+		$.fun.confirm({
+			"content":"저장 하시겠습니까?",
+			"action":function(){
+				$.fun.ajax({
+					"url":"/ncs/ncsProc.do",
+					"data":data,
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						if(data["result"]>0){
+							$.fun.alert({
+								"content":"요청하신 작업이 완료되었습니다.",
+								"action":function(){
+									location.reload();
+									$("#comp_ncs").dialog('destroy').remove();
+								}
+							});
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+					}
+				});
+				return true;
+			}
+		});
+		return false;
+	},
+	/**
+	 * 능력단위요소 메뉴<추가>
+	 */
+	"addDutyMenu":function(key){
+		$tbody=$("#JS_VALIDATE_TABLE tbody:first").clone();
+		$tbody.find("tr").not(":first").remove();
+		$tbody.find("tr").attr("rowspan",1);
+		$tbody.find("input[type='text']").val("");
+		$tbody.find("td").eq(0).find("a").attr("onclick", "alert('자율직무를 저장한 이후 적용 가능합니다.');");
+		$("#JS_VALIDATE_TABLE").append(jqueryEvent.bind($tbody));
+		return false;
+	},
+	/**
+	 * 능력단위요소 메뉴<삭제>
+	 */
+	"delDutyMenu":function(input){
+		if($("#JS_VALIDATE_TABLE tbody").length==1){
+			$.fun.alert({
+				"content":"더이상 삭제 할 수 없습니다."
+			});
+			return false;
+		}
+		$(input).parent().parent().parent().remove();
+		//schval_write.init();
+		return false;
+	},
+	/**
+	 * 수행준거 메뉴<추가>
+	 */
+	"addDutySubMenu":function(input){
+		$tbody=$(input).parent().parent().parent();
+		$tbody.find("tr:first > td:first").attr("rowspan",$tbody.find("tr").length+1);
+		$tr=$tbody.find("tr:first").clone();
+		$tr.find("td").eq(0).remove();
+		$tr.find("input").val("");
+		$tbody.append(jqueryEvent.bind($tr));
+		return false;
+	},
+	/**
+	 * 수행준거 메뉴<삭제>
+	 */
+	"delDutySubMenu":function(input){
+		$tbody=$(input).parent().parent().parent();
+		if($tbody.find("tr:first").is($(input).parent().parent())){
+			$.fun.alert({
+				"content":"첫번째 항목은 삭제 할 수 없습니다."
+			});
+			return false;
+		}else if($tbody.find("tr:first").is($(input).parent().parent())||$tbody.children("tr").length==1){
+			$.fun.alert({
+				"content":"더이상 삭제 할 수 없습니다."
+			});
+			return false;
+		}
+		$(input).parent().parent().remove();
+		//schval_write.init();
+		return false;
+	},
+	/**
+	 * 자율직무 JSON데이타
+	 */
+	"serialize":function(){
+		var result=[];
+		var i = 0;
+		$("input[name='dutyMenu[]']").each(function(){
+			var subMenu=[];
+			//alert($(this).parent().parent().parent().html());
+			$(this).parent().parent().parent().find("input[name='dutySubMenu[]']").each(function(){
+				subMenu.push({
+					"title":$(this).val()
+				});
+				i++;
+			});
+			result.push({
+				"title":$(this).val(),
+				"dutySubMenu":subMenu
+			});
+		});
+		return $.fun.json_decode(result);
+	},
+	/**
+	 * 자율직무 등록
+	 */
+	"dutyProc":function(){
+		var data=$("#frmNcs").serializeArray();
+		data.push({
+			name:"dutyData",
+			value:ncsPopFn.serialize()
+		});
+		$.fun.confirm({
+			"content":"저장 하시겠습니까?",
+			"action":function(){
+				$.fun.ajax({
+					"url":"/ncs/dutyProc.do",
+					"data":data,
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						if(data["result"]>0){
+							$.fun.alert({
+								"content":"요청하신 작업이 완료되었습니다.",
+								"action":function(){
+									//$("#comp_ncs").dialog('destroy').remove();
+									$(".add").css("display","");
+
+								}
+							});
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+					}
+				});
+				return true;
+			}
+		});
+		return false;
+	}
+};
+
+$(document).ready(function(){
+	$("[name='ncsDeptB[]']").each(function(){
+		ncsPopFn.ncsStart(this);
+	});
+
+
+});+���j      c���c���D��(c��.   [    O^partitionKey=%28https%2Ctukorea.ac.kr%29,:https://coop.tukorea.ac.kr/common/js/ncs/ncs.js necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 29 Nov 2022 05:03:42 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"10858-1620286307000"
+Last-Modified: Thu, 06 May 2021 07:31:47 GMT
+Content-Type: application/javascript
+Content-Length: 10858
+ original-response-headers Date: Tue, 29 Nov 2022 05:03:42 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"10858-1620286307000"
+Last-Modified: Thu, 06 May 2021 07:31:47 GMT
+Content-Type: application/javascript
+Content-Length: 10858
+Keep-Alive: timeout=5, max=96
+Connection: Keep-Alive
+ ctid 2 uncompressed-len 0 net-response-time-onstart 183 net-response-time-onstop 184   *j

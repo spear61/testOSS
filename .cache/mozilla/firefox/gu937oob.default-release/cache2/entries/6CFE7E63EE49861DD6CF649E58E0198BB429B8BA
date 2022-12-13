@@ -1,0 +1,2493 @@
+if ($(location).attr('host') != 'localhost:8080') {
+//	if (document.location.protocol == 'http:') document.location.href = document.location.href.replace('http:', 'https:');
+}
+//<!-- [국내/국외구분 202104] -->
+var param={};
+var paramCp={};
+//<!-- //[국내/국외구분 202104] -->
+var common={
+	"creditNotice" : function () {
+		$.fun.ajax( {
+			"url" : "/common/layout/creditNotice.do",
+			"data" : {} ,
+			"success" : function ( data ) {
+				$.fun.layout( {
+					"id" : "creditNotice_layout" ,
+					"title" : "성적이관안내" ,
+					"width" : 550 ,
+					"content" : jqueryEvent.bind( $( data ) ) ,
+					"buttons" : {
+						"닫기" : function () {
+							$( this ).dialog( 'destroy' ).remove();
+						}
+					}
+				} );
+			}
+		} );
+		return false;
+	} ,
+	"creditHisList" : function (jimSeq) {
+		$.fun.ajax( {
+			"url" : "/common/layout/creditHisList.do",
+			"data" : {"jimSeq":jimSeq} ,
+			"success" : function ( data ) {
+				$.fun.layout( {
+					"id" : "creditNotice_layout" ,
+					"title" : "성적변경이력" ,
+					"width" : 700 ,
+					"content" : jqueryEvent.bind( $( data ) ) ,
+					"buttons" : {
+						"닫기" : function () {
+							$( this ).dialog( 'destroy' ).remove();
+						}
+					}
+				} );
+			}
+		} );
+		return false;
+	} ,
+	"sms" : function(param){
+		$.fun.ajax( {
+			"url" : "/smsProc.do" ,
+			"data" : param ,
+			"success" : function ( data ) {
+				data = $.fun.json_encode( data );
+				if ( data[ "result" ] ) {
+					$.fun.alert( {
+						"content" : "요청하신 작업이 완료되었습니다." ,
+						"action" : function () {
+							location.reload();
+						}
+					} );
+				} else {
+					$.fun.alert( {
+						"content" : "요청이 실패되었습니다."
+					} );
+				}
+			}
+		} );
+		return true;
+	},
+	//<!-- [국내/국외구분 202104] -->
+	"country" : {
+		"init" : function(type) {
+			// [공통영역] 데이터 저장 및 타겟 태그 생성
+			$(".countryFamily").each(function(i,e){
+				$(this).wrap('<span class="countryFamilyArea"></span>');
+				param[e.name] = this;
+				paramCp[e.name] = $(this).clone();
+			});
+
+			if(type == "COMP") {
+				// 추가개발(아이디체크)
+				/*if($("#writeForm").find("input[name='compSeq']").val() == "") {
+					$("#compId").each(function(i,e){
+						$(this).wrap('<span class="countryFamilyArea"></span>');
+						param[e.name] = this;
+						paramCp[e.name] = $(this).clone();
+					});
+				}*/
+				// 추가개발(아이디체크)
+
+				common.country.data.countryAdd1 = $(".countryAdd1").html();				// 등록번호 태그저장
+				common.country.data.countryAdd2 = $(".countryAdd2").html();				// 사업장소재지 태그저장
+				common.country.chn($("select[name='compCountryCode']").val(),"COMP");	// 적용
+			} else if(type == "DEPT") {
+				common.country.data.countryAdd2 = $(".countryAdd2").html();				// 사업장소재지 태그저장
+				common.country.chn($("input[name='compCountryCode']").val(),"DEPT");	// 적용
+			} else if(type == "JOIN") {
+				common.country.data.countryAdd2 = $(".countryAdd2").html();				// 사업장소재지 태그저장
+				common.country.chn($("input[name='compCountryCode']").val(),"JOIN");	// 적용
+			}
+
+		},
+		"data" : {
+			"countryAdd1" : "",
+			"countryAdd2" : ""
+		},
+		"chn" : function(countryVal,type) {
+			console.log(countryVal + "//" +  type)
+				if(countryVal == "B") {
+
+					$.each(param,function(index,entry){
+
+						if($(entry).attr("class").indexOf("'required':true,") > -1 ) {
+							console.log("aaa");
+							$(entry).attr("class",$(entry).attr("class").replace("'required':true,",""));		// 필수제거
+						}
+						if($(entry).attr("class").indexOf("{'required':true}") > -1 ) {
+							console.log("bbb");
+							$(entry).attr("class",$(entry).attr("class").replace("{'required':true}",""));		// 필수제거
+						}
+						if($(entry).attr("class").indexOf("{'ime':'tel'}") > -1 ) {
+							console.log("ccc");
+							$(entry).attr("class",$(entry).attr("class").replace("{'ime':'tel'}",""));			// 전화형식제거
+						}
+
+						if($(entry).attr("class").indexOf("'ime':'compNo'") > -1 ) {
+							console.log("ccc");
+							$(entry).attr("class",$(entry).attr("class").replace("'ime':'compNo'",""));			// 사업자등록번호형식제거
+						}
+						$(entry).removeAttr("maxLength");			// maxLength 제거
+						common.country.chnTh(entry.name,countryVal)	// 화면필수제거
+					});
+				} else {
+					$.each(param,function(index,entry){
+						$(entry).attr("class",$(paramCp[entry.name]).attr("class"));				// 본 class 변경
+						$(entry).attr("maxLength",$(paramCp[entry.name]).attr("maxLength"));		// 본 maxLength 변경
+						common.country.chnTh(entry.name,countryVal);
+						// 추가개발(아이디체크)
+						/*if(type == "COMP" && $(entry).attr("id") == "compId") {
+							$(entry).attr("readonly",true);
+						}*/
+						// 추가개발(아이디체크)
+					});
+				}
+
+				if(type == "COMP") {
+					common.country.chnHtml.comp(countryVal);	// 항목 추가
+					common.country.chnHtml.addr(countryVal,"compZipcode","compAddr1","compAddr2");	// 주소 변경
+				} else if(type == "DEPT") {
+					common.country.chnHtml.addr(countryVal,"compDeptZipcode","compDeptAddr1","compDeptAddr2");	// 주소 변경
+				} else if(type == "JOIN") {
+					common.country.chnHtml.addr(countryVal,"jidZipcode","jidAddr1","jidAddr2");	// 주소 변경
+				}
+				common.country.bind(countryVal);			// 바인드
+		},
+		// 화면필수제거
+		"chnTh" : function(name,countryVal){
+			if (countryVal == "B") {
+				$("input[name='"+name+"']").parent().parent().prev().find("span").removeClass("required");
+			}  else {
+				if($("input[name='"+name+"']").parent().parent().prev().find("span").hasClass("required") == false) {
+					$("input[name='"+name+"']").parent().parent().prev().find("span").addClass("required");
+				}
+			}
+		},
+		// 항목변경
+		"chnHtml" : {
+			"addr" : function(countryVal,zipcode,addr1,addr2){
+				if(countryVal == "B") {
+					console.log(zipcode)
+					console.log(addr1)
+					console.log(addr2)
+					$(".countryAdd2").find("input[name='"+zipcode+"']").attr("readonly",false);
+					$(".countryAdd2").find("input[name='"+zipcode+"']").attr("onclick","");
+					$(".countryAdd2").find("input[name='"+zipcode+"']").attr("placeholder","우편번호(postal code) 입력해주세요.");
+					$(".countryAdd2").find("input[name='"+zipcode+"']").removeClass("w_150")
+					$(".countryAdd2").find("input[name='"+zipcode+"']").addClass("w_300")
+					$(".countryAdd2").find(".btn_inner").remove();
+					$(".countryAdd2").find("input[name='"+addr1+"']").attr("readonly",false);
+					$(".countryAdd2").find("input[name='"+addr1+"']").attr("placeholder","주소(Address 1) 입력해주세요.");
+					$(".countryAdd2").find("input[name='"+addr2+"']").attr("placeholder","주소(Address 2) 입력해주세요.");
+				} else {
+					$(".countryAdd2").html(common.country.data.countryAdd2);
+
+				}
+			},
+			"comp" : function(countryVal) {
+				// 실습기관의 추가되는 항목
+				if(countryVal == "B") $(".countryAdd1").html(common.country.data.countryAdd1);
+				else $(".countryAdd1").html("");
+			},
+			"dept" : function(countryVal) {
+				// 부서의 추가되는 항목
+			},
+			"join" : function(countryVal) {
+				// 참여신청서 추가되는 항목
+			}
+		},
+		"bind" : function(countryVal) {
+			$.each(param,function(index,entry){
+				$(entry).parents(".countryFamilyArea").html(entry);		// bind 처리
+			});
+			jqueryEvent.bind($("#writeForm").find(".countryArea"));
+		}
+	},
+	//<!-- //[국내/국외구분 202104] -->
+	//<!--[202103 COOP] 추가-->
+	// 시작일과 종료일 설정된 요일별 일수 구하기
+	"workdayDiff" : function(param) {
+		var result = [];
+	 	var sday = new Date(param.jidSDate);
+	   	var eday = new Date(param.jidEDate);
+   		console.log(sday + "~" + eday);
+  		while(sday.getTime() <= eday.getTime()){
+  			var month = (sday.getMonth()+1);
+  			month = month < 10 ? '0'+month : month;
+  			var day = sday.getDate();
+  			day = day < 10 ? '0'+day : day;
+  			result.push(sday.getFullYear() + '-' + month + '-' +  day);
+  			sday.setDate(sday.getDate() + 1);
+  		}
+  		console.log(param);
+  		var week = ['일', '월', '화', '수', '목', '금', '토'];
+  		var weekCnt = 0;
+	  	for(var i=0; i<result.length; i++) {
+	  		if(param.monday != undefined && param.monday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.tuesday != undefined && param.tuesday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.wednesday != undefined && param.wednesday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.thursday != undefined && param.thursday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.friday != undefined && param.friday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.saturday != undefined && param.saturday == new Date(result[i]).getDay()) weekCnt += 1;
+	  		else if(param.sunday != undefined && param.sunday == new Date(result[i]).getDay()) weekCnt += 1;
+//	  		console.log(result[i]);
+//	  		console.log(week[new Date(result[i]).getDay()]);
+//	  		console.log(new Date(result[i]).getDay());
+	  	}
+	  	console.log(weekCnt);
+
+	   	return weekCnt;
+	},
+	"inspectCheck" : function() {
+		var inspectCnt = 0;
+		$(".inspect_detail").find("input[type='radio']:checked").each(function() { inspectCnt += 1; });
+		$(".inspect_detail").find("input[type='checkbox']:checked").each(function() { inspectCnt += 1; });
+		if($(".inspect_detail").find("textarea").val().length > 0) { inspectCnt += 1; }
+		if(inspectCnt > 0)  $(".inspect_cont a").click();
+	},
+	"insuDel" : function ( jimSeq ) {
+		$.fun.confirm( {
+			"content" : "산재보험 증빙서류를 삭제하시겠습니까?" ,
+			"action" : function () {
+				$.fun.ajax( {
+					"url" : "/insuProc.do" ,
+					"data" : {
+						"jimSeq" : jimSeq ,
+						"insuDel" : "Y"
+					} ,
+					"success" : function ( data ) {
+						data = $.fun.json_encode( data );
+						console.log( data );
+						if ( data[ "result" ] > -1 ) {
+							$.fun.alert( {
+								"content" : "삭제되었습니다." ,
+								"action" : function () {
+									location.reload();
+								}
+							} );
+						} else {
+							$.fun.alert( {
+								"content" : "요청이 실패되었습니다."
+							} );
+						}
+					}
+				} );
+				return true;
+			}
+		} );
+		return false;
+	} ,
+	"insuUpload" : function ( jimSeq ) {
+		common.upload( function ( data ) {
+			$.fun.ajax( {
+				"url" : "/insuProc.do" ,
+				"data" : {
+					"jimSeq" : jimSeq ,
+					"insuUpload" : $.fun.json_decode( data )
+				} ,
+				"success" : function ( data ) {
+					data = $.fun.json_encode( data );
+					if ( data[ "result" ] ) {
+						$.fun.alert( {
+							"content" : "요청하신 작업이 완료되었습니다." ,
+							"action" : function () {
+								location.reload();
+							}
+						} );
+					} else {
+						$.fun.alert( {
+							"content" : "요청이 실패되었습니다."
+						} );
+					}
+				}
+			} );
+			return true;
+		} );
+		return false;
+	} ,
+	"insuJoinDate" : function ( jimSeq ) {
+		var val = $( "#insuJoinDate"+jimSeq ).val();
+		$.fun.confirm( {
+			"content" : "산재보험 가입일을 저장하시겠습니까?" ,
+			"action" : function () {
+				$.fun.ajax( {
+					"url" : "/insuProc.do" ,
+					"data" : {
+						"jimSeq" : jimSeq ,
+						"insuJoinDate" : val
+					} ,
+					"success" : function ( data ) {
+						data = $.fun.json_encode( data );
+						console.log( data );
+						if ( data[ "result" ] > -1 ) {
+							$.fun.alert( {
+								"content" : "저장되었습니다." ,
+								"action" : function () {
+									location.reload();
+								}
+							} );
+						} else {
+							$.fun.alert( {
+								"content" : "요청이 실패되었습니다."
+							} );
+						}
+					}
+				} );
+				return true;
+			}
+		} );
+		return false;
+	} ,
+	"presentationDate" : function ( param ) {
+		$.fun.confirm( {
+			"content" : "중간발표회 일정을 저장하시겠습니까?" ,
+			"action" : function () {
+				$.fun.ajax( {
+					"url" : "/presentationDateProc.do" ,
+					"data" : param ,
+					"success" : function ( data ) {
+						data = $.fun.json_encode( data );
+						console.log( data );
+						if ( data[ "result" ] > -1 ) {
+							$.fun.alert( {
+								"content" : "저장되었습니다." ,
+								"action" : function () {
+									location.reload();
+								}
+							} );
+						} else {
+							$.fun.alert( {
+								"content" : "요청이 실패되었습니다."
+							} );
+						}
+					}
+				} );
+				return true;
+			}
+		} );
+		return false;
+	} ,
+	"bankDel" : function ( jimSeq ) {
+		$.fun.confirm( {
+			"content" : "실습지 지급내역(통장사본)을 삭제하시겠습니까?" ,
+			"action" : function () {
+				$.fun.ajax( {
+					"url" : "/bankProc.do" ,
+					"data" : {
+						"jimSeq" : jimSeq ,
+						"bankDel" : "Y"
+					} ,
+					"success" : function ( data ) {
+						data = $.fun.json_encode( data );
+						console.log( data );
+						if ( data[ "result" ] > -1 ) {
+							$.fun.alert( {
+								"content" : "삭제되었습니다." ,
+								"action" : function () {
+									location.reload();
+								}
+							} );
+						} else {
+							$.fun.alert( {
+								"content" : "요청이 실패되었습니다."
+							} );
+						}
+					}
+				} );
+				return true;
+			}
+		} );
+		return false;
+	} ,
+	//<!--[202103 COOP] 추가-->
+	"bankUpload" : function ( jimSeq ) {
+		common.upload( function ( data ) {
+			$.fun.ajax( {
+				"url" : "/bankProc.do" ,
+				"data" : {
+					"jimSeq" : jimSeq ,
+					"bankUpload" : $.fun.json_decode( data )
+				} ,
+				"success" : function ( data ) {
+					data = $.fun.json_encode( data );
+					if ( data[ "result" ] ) {
+						$.fun.alert( {
+							"content" : "요청하신 작업이 완료되었습니다." ,
+							"action" : function () {
+								location.reload();
+							}
+						} );
+					} else {
+						$.fun.alert( {
+							"content" : "요청이 실패되었습니다."
+						} );
+					}
+				}
+			} );
+			return true;
+		} );
+		return false;
+	} ,
+	"bankMoney" : function ( jimSeq,bankMoney ) {
+		if(bankMoney == "") {
+			$.fun.alert({"content" : "기업체 실습비 지급금액을 입력해주세요"});
+			return false;
+		}
+		$.fun.confirm( {
+			"content" : "저장하시겠습니까?" ,
+			"action" : function () {
+				$.fun.ajax( {
+					"url" : "/bankProc.do" ,
+					"data" : {
+						"jimSeq" : jimSeq ,
+						"bankMoney" : bankMoney.replace(/,/gi, "")
+					} ,
+					"success" : function ( data ) {
+						data = $.fun.json_encode( data );
+						if ( data[ "result" ] ) {
+							$.fun.alert( {
+								"content" : "요청하신 작업이 완료되었습니다." ,
+								"action" : function () {
+									location.reload();
+								}
+							} );
+						} else {
+							$.fun.alert( {
+								"content" : "요청이 실패되었습니다."
+							} );
+						}
+					}
+				} );
+				return true;
+			}
+		});
+	} ,
+	"comFileUpload" : {
+		"init" : function(dataSeq,uploadName,fileSnName,form,url,type){
+			var formTag = "";
+			if($("body").find(form).length < 1) {
+				formTag = '<form name="'+form+'" id="'+form+'" method="get" action="/">';
+				formTag += '<input name="dataSeq" value="'+dataSeq+'" />';
+				formTag += '<input type="hidden" name="'+uploadName+'" />';
+				formTag += '<input type="hidden" name="'+fileSnName+'" value="" />';
+				formTag += '<input type="hidden" name="type" value="'+type+'" />';
+				formTag += '</form>';
+				$("body").append(formTag);
+			}
+			common.comFileUpload.upload(uploadName, form, url);
+		},
+		"upload" : function( uploadName ,form, url){
+			/*console.log(uploadName)
+			console.log(jimSeq)
+			console.log(form)
+			console.log(url)*/
+			common.upload( function ( data ) {
+				$("#" + form ).find( "[name='" + uploadName + "']" ).val( $.fun.json_decode( data ) );
+				/*$("#" + form ).find( "[name='jimSeq']" ).val( jimSeq );*/
+				$.fun.ajax( {
+					"url" : url ,
+					"data" : $("#" + form ).serialize() ,
+					"success" : function ( data ) {
+						$.fun.alert({
+							"content":"업로드가 완료 되었습니다.",
+							"action" : function () {
+								location.reload();
+							}
+						});
+					}
+				} );
+			} );
+			return false;
+		},
+		"del" : function ( dataSeq,delName,url,type ) {
+			var data = "";
+			if(delName == "newOpFileDel") data = {"dataSeq":dataSeq,"newOpFileDel":"Y","type":type};
+			if(delName == "insuFileDel") data = {"dataSeq":dataSeq,"insuFileDel":"Y","type":type};
+			if(delName == "stAgreementFileDel") data = {"dataSeq":dataSeq,"stAgreementFileDel":"Y","type":type};
+			if(delName == "jimPresentationFileDel") data = {"dataSeq":dataSeq,"jimPresentationFileDel":"Y","type":type};
+			console.log(data);
+			$.fun.confirm( {
+				"content" : "파일을 삭제하시겠습니까?" ,
+				"action" : function () {
+					$.fun.ajax( {
+						"url" : url ,
+						"data" : data ,
+						"success" : function ( data ) {
+							data = $.fun.json_encode( data );
+							console.log( data );
+							if ( data[ "result" ] > -1 ) {
+								$.fun.alert( {
+									"content" : "삭제되었습니다." ,
+									"action" : function () {
+										location.reload();
+									}
+								} );
+							} else {
+								$.fun.alert( {
+									"content" : "요청이 실패되었습니다."
+								} );
+							}
+						}
+					} );
+					return true;
+				}
+			} );
+			return false;
+		} ,
+	},
+	"compValuation" : function ( jimSeq ) {
+		$.fun.ajax( {
+			"url" : "/common/layout/compValuation.do" ,
+			"data" : {
+				"jimSeq" : jimSeq
+			} ,
+			"success" : function ( data ) {
+				$.fun.layout( {
+					"id" : "compValuation_LAYOUT" ,
+					"title" : "기관 피드백" ,
+					"width" : 700 ,
+					"content" : jqueryEvent.bind( data ) ,
+					"buttons" : {
+						"닫기" : {
+							"text" : '닫기' ,
+							'class' : 'close' ,
+							"click" : function () {
+								$( this ).dialog( 'destroy' ).remove();
+								if ( conf.closeAction ) {
+									conf.closeAction();
+								}
+							}
+						}
+					}
+				} );
+			}
+		} );
+		return false;
+	} ,
+	//<!--[202103 COOP] 추가-->
+	"attsetNew" : function ( val, group ) {
+		console.log(val)
+		console.log(group)
+		nowDate = new Date();
+		year = nowDate.getFullYear();
+		month = nowDate.getMonth()+1;
+		day = nowDate.getDate()
+		if(month < 10) month = '0'+month;
+		if(day < 10) day = '0'+day;
+		now = year + "-" + month + "-" + day;
+
+		if (group == "4") {
+			$( ".tbl_calendar" ).find( "tbody td" ).each( function ( i ) {
+				if ( $( this ).find( "input[name='workday[]']" ).length > 0 ) {
+					if ( $( this ).find( "input[name^='workday']:checked" ).length < 1 ) {
+
+						$( this ).find( "input[name^='workday'][value='" + val + "']" ).prop( "checked" ,"true" );
+						$( this ).find( "input[name^='workday'][value='" + val + "']" ).click();
+					}
+				}
+			} );
+		} else {
+			$( ".tbl_calendar" ).find( "tbody td" ).each( function ( i ) {
+				if ( $( this ).find( "input[name='workday[]']" ).length > 0 ) {
+					if ( $( this ).find( "input[name^='workday']:checked" ).length < 1 ) {
+						if(now >= $( this ).find( "input[name^='workday']").val()) {
+							$( this ).find( "input[name^='workday'][value='" + val + "']" ).prop( "checked" ,"true" );
+							$( this ).find( "input[name^='workday'][value='" + val + "']" ).click();
+						}
+					}
+				}
+			} );
+		}
+
+		$( "input[name^='workday']" ).each( function () {
+			if ( $( this ).is( ":checked" ) == true && $( this ).val() == "Y" ) {
+				self.readonlyChn( this ,false );
+				$( this ).parent().find( "[name='jiwHour[]']" ).val( 8 );
+				$( this ).parent().find( "[name='jiwHourExtend[]']" ).val( 0 );
+			}
+		} );
+	} ,
+	//<!--//[202103 COOP] 추가-->
+	//<!-- 개인정보동의 [20190705] -->
+	"agreeInfo" : {
+		"checkCnt" : function(){
+			$.fun.ajax({
+				"url":"/common/agreeCheck.do",
+				"data":{},
+				"success":function(data){
+					data=$.fun.json_encode(data);
+					console.log(data["result"]);
+					if(data["result"]==0){
+						common.agreeInfo.layout();
+					}
+				}
+			});
+
+		},
+		"layout" : function(id){
+			var param={id:id};
+			$.get("/common/agreeInfo.do",param,function(r){
+				$.fun.layout({
+					"id":"agreeInfoPopup",
+					"title":"현장실습을 위한 개인정보 수집·이용 및 제3자 제공 동의서",
+					"width":750,
+					"content":r,
+					"buttons":{
+						"동의하지 않음":function(){
+							$.fun.confirm({
+								"content":"동의하지 않는 경우, 자동으로 로그아웃 화면으로 전환됩니다.",
+								"action":function(){
+									//$(this).dialog('destroy').remove();
+									location.href="/logout.do";
+								}
+							});
+
+						},
+						"동의함":function(){
+							common.agreeInfo.proc();
+						}
+					}
+				});
+			});
+			return false;
+			} ,
+		"proc":function(){
+			var form=document.degreeForm;
+			var data=$(form).serializeArray();
+			$.fun.confirm({
+				"content":"개인정보 수집·이용동의에 동의하시겠습니까?",
+				"action":function(){
+					$.fun.ajax({
+						"url":"/common/agreeProc.do",
+						"data":data,
+						"success":function(data){
+							data=$.fun.json_encode(data);
+							console.log(data);
+							if(data["result"]>-1){
+								$.fun.alert({
+									"content":"동의하였습니다.",
+									"action":function(){
+										location.reload();
+									}
+								});
+							}else{
+								$.fun.alert({
+									"content":"요청이 실패되었습니다."
+								});
+							}
+						}
+					});
+					return true;
+				}
+			});
+			return false;
+		},
+	},
+	//<!-- //개인정보동의 [20190705] -->
+	"zipCode":{
+		"targetZipcode":null,
+		"targetAddress":null,
+		"layout":function(form){
+			$.fun.ajax({
+				"url":"/zipCode.do",
+				data:form?$(form).serialize():null,
+				"success":function(data){
+					$.fun.layout({
+						"id":"common_zip_code",
+						"title":"우편번호 검색",
+						"subTitle":"우편번호 검색",
+						"width":500,
+						"content":$(data)
+					});
+				}
+			});
+			return false;
+		},
+		"bind":function(zipInfo){
+			$(common.zipCode.targetZipcode).val(zipInfo.zipcode);
+			$(common.zipCode.targetAddress).val(zipInfo.address);
+			$("#common_zip_code").dialog('destroy').remove();
+			return false;
+		},
+		"init":function(param){
+			common.zipCode.targetZipcode=param.targetZipcode;
+			common.zipCode.targetAddress=param.targetAddress;
+			common.zipCode.layout(null);
+			return false;
+		},
+		"page":function(page){
+			var form=document.common_zip_code_form;
+			if(page) form.page.value=page;
+			common.zipCode.layout(form);
+			return false;
+		},
+		"keydown":function(){
+			if(event.keyCode==13){
+				return common.zipCode.page(1);
+			}
+		}
+	},
+	"zipCodeRoad":{
+		"targetZipcode":null,
+		"targetAddress":null,
+		"layout":function(form){
+			$.fun.ajax({
+				"url":"/zipCodeRoad.do",
+				data:form?$(form).serialize():null,
+				"success":function(data){
+					$.fun.layout({
+						"id":"common_zip_code",
+						"title":"우편번호 도로명 검색",
+						"subTitle":"우편번호 도로명 검색",
+						"width":500,
+						"content":$(data)
+					});
+				}
+			});
+			return false;
+		},
+		"bind":function(zipInfo){
+			var zipcode=zipInfo.zipcode;
+			var zip1=zipcode.substring(0,3);
+			var zip2=zipcode.substring(3);
+			var zip=zip1+"-"+zip2;
+			$(common.zipCodeRoad.targetZipcode).val(zip);
+			$(common.zipCodeRoad.targetAddress).val(zipInfo.address);
+			$("#common_zip_code").dialog('destroy').remove();
+			return false;
+		},
+		"init":function(param){
+			common.zipCodeRoad.targetZipcode=param.targetZipcode;
+			common.zipCodeRoad.targetAddress=param.targetAddress;
+			common.zipCodeRoad.layout(null);
+			return false;
+		},
+		"page":function(page){
+			var form=document.frmZipCodeRoad;
+			if(page) form.page.value=page;
+			common.zipCodeRoad.layout(form);
+			return false;
+		},
+		"keydown":function(){
+			if(event.keyCode==13){
+				return common.zipCodeRoad.page(1);
+			}
+		}
+	},
+	"daumZipcode" : function ( zipCode ,addr1 ) {
+		daum.postcode.load( function () {
+			new daum.Postcode( {
+				oncomplete : function ( data ) {
+					console.log( data );
+					if ( data.userSelectedType == 'R' ) {
+						$( zipCode ).val( data.zonecode );
+						$( addr1 ).val( data.address );
+					} else {
+						$( zipCode ).val( data.zonecode );
+						$( addr1 ).val( data.jibunAddress );
+					}
+				}
+			} ).open();
+		} );
+	} ,
+	"upload":function(action, type){
+		if(type == null) type = "";
+		$.fun.ajax({
+			"url":"/fileUploadLayout.do",
+			"success":function(data){
+				$.fun.layout({
+					"id":"file_upload_layout",
+					"title":"파일업로드",
+					"width":300,
+					"content":jqueryEvent.bind($(data)),
+					"action":function(data){
+						var form=document.file_upload_form;
+						$(form).attr({
+							"method":"post",
+							"action":"/upload" + type + ".do"
+						});
+						$.fun.ajaxSubmit({
+							form:form,
+							paramType:"text",
+							action:function(data){
+								$("#file_upload_layout").dialog('destroy').remove();
+								action($.fun.json_encode(data));
+							}
+						});
+					}
+				});
+			}
+		});
+		return false;
+	},
+	"excelHeader":function(conf){
+		conf.form.action="/excelHeader.do";
+		$.fun.ajaxSubmit({
+			"form":conf.form,
+			"action":conf.action
+		});
+		return false;
+	},
+	"commonGrpCdList":function(paramMap,target,value){
+		$.fun.ajax({
+			"url":"/commonGrpCdList.do",
+			"data":paramMap,
+			"success":function(data){
+				data=$.fun.json_encode(data);
+				$(target).find("option:not(option:first)").remove();
+				$(data).each(function(index,val){
+					$(target).append('<option value="'+val.cd+'" '+(val.cd==value?'selected="selected"':"")+'>'+val.cdNm+'</option>');
+				});
+				$(target).change();
+			}
+		});
+		return false;
+	},
+	"commonGrpCdBind":function(grpCd,target){
+		alert("Asdf");
+		console.log(target);
+		$.fun.ajax({
+			"url":"/common/grpCdList.do",
+			"data":"grpCd="+grpCd,
+			"success":function(data){
+				data=$.fun.json_encode(data);
+				$(target).find("option:not(option:first)").remove();
+				$(data).each(function(index,val){
+					$(target).append('<option value="'+val.cd+'">'+val.cdNm+'</option>');
+				});
+				//$(target).change();
+			}
+		});
+	},
+	"commonGrpCdBindEx":function(grpCd, classCd, target, year){
+		$.fun.ajax({
+			"url":"/ex/grpCdList.do",
+			"data":{"grpCd":grpCd, "classCd":classCd,"year":year},
+			"success":function(data){
+				data=$.fun.json_encode(data);
+				$(target).find("option:not(option:first)").remove();
+				$(data).each(function(index,val){
+					$(target).append('<option value="'+val.cd+'">'+val.cdNm+'</option>');
+				});
+//				$(target).change();
+			}
+		});
+	},
+	"jobInternDetail":function( jidSeq ,jsSeq, type ) {
+		if(type == 'mob'){
+			$.mobile.changePage("/mob/jobInternDetail.do", {
+				type: "post",
+				data: {
+					"jidSeq":jidSeq,"jsSeq" : jsSeq
+				},
+				changeHash: true,
+				transition:"pop"
+			});
+		}else{
+			$.fun.ajax({
+				"url":"/jobInternDetail.do",
+				data:{
+					"jidSeq":jidSeq
+					,"jsSeq":jsSeq
+				},
+				"success":function(data){
+					$.fun.layout({
+						"id":"JOB_INTERN_DETAIL",
+						"title":"실습기관 정보 및 실습운영계획서",
+						"width":1000,
+						"content":$(data)
+					});
+				}
+			});
+		}
+		return false;
+	},
+	"jobStudentDetail":function(studentSeq, type, dtlCode){
+		if(type == 'mob'){
+			$.mobile.changePage("/mob/jobStudentDetail.do", { type: "post", data: {"stSeq":studentSeq, "dtlCode":dtlCode}, changeHash: true, transition:"pop" });
+		}else{
+			$.fun.ajax({
+				"url":"/jobStudentDetail.do",
+				data:{
+					"stSeq":studentSeq
+				},
+				"success":function(data){
+					$.fun.layout({
+						"id":"JOB_INTERN_DETAIL",
+						"title":"이력서",
+						"width":1000,
+						"content":$(data)
+					});
+				}
+			});
+		}
+		return false;
+	},// 자기소개서
+	"jobStudentDetail2":function(studentSeq){
+		$.fun.ajax({
+			"url":"/jobStudentDetail.do",
+			data:{
+				"stSeq":studentSeq,
+				"flag":"step2"
+			},
+			"success":function(data){
+				$.fun.layout({
+					"id":"JOB_INTERN_DETAIL",
+					"title":"이력서",
+					"width":1000,
+					"content":$(data)
+				});
+			}
+		});
+		return false;
+	},
+	// <!-- 학생이력관리 [20190412] -->
+	// 학생 최신 이력서
+	"jobStudentDetailReal":function(studentSeq, type, dtlCode, jimSeq){
+		if(type == 'mob'){
+			$.mobile.changePage("/mob/jobStudentDetailReal.do", { type: "post", data: {"stSeq":studentSeq, "dtlCode":dtlCode,"jimSeq":jimSeq}, changeHash: true, transition:"pop" });
+		}else{
+			$.fun.ajax({
+				"url":"/jobStudentDetailReal.do",
+				data:{
+					"stSeq":studentSeq,
+					"jimSeq":jimSeq
+				},
+				"success":function(data){
+					$.fun.layout({
+						"id":"JOB_INTERN_DETAIL",
+						"title":"이력서",
+						"width":1000,
+						"content":$(data)
+					});
+				}
+			});
+		}
+		return false;
+	},// 학생 최신 자기소개서
+	"jobStudentDetail2Real":function(studentSeq, jimSeq){
+		$.fun.ajax({
+			"url":"/jobStudentDetailReal.do",
+			data:{
+				"stSeq":studentSeq,
+				"flag":"step2",
+				"jimSeq":jimSeq
+			},
+			"success":function(data){
+				$.fun.layout({
+					"id":"JOB_INTERN_DETAIL",
+					"title":"이력서",
+					"width":1000,
+					"content":$(data)
+				});
+			}
+		});
+		return false;
+	},
+	// <!-- //학생이력관리 [20190412] -->
+	"studentPrintLayOut":function(studentSeq){ // 이력서&자기소개서 출력
+		$.fun.ajax({
+			"url":'/organization/join/studentPrintLayOut.do',
+			"data":{
+				"studentSeq":studentSeq
+			},
+			"success":function(data){
+				$.fun.layout({
+					"id":"studentPrintLayOut",
+					"title":"이력서&자기소개서",
+					"width":900,
+					"content":$(data)
+				});
+			}
+		});
+		return false;
+	},
+	"studentPrintLayOut":function(studentSeq){ // 이력서&자기소개서 출력
+		$.fun.ajax({
+			"url":'/organization/join/studentPrintLayOut.do',
+			"data":{
+				"studentSeq":studentSeq
+			},
+			"success":function(data){
+				$.fun.layout({
+					"id":"studentPrintLayOut",
+					"title":"이력서&자기소개서",
+					"width":900,
+					"content":$(data)
+				});
+			}
+		});
+		return false;
+	},
+	"exProfessor":{
+		"jidProfId":null,
+		"jidProfName":null,
+		"jidProfDept":null,
+		"jidProfDeptName":null,
+		"func":null,
+		"jidSeq":null,
+		"jimSeq" : null ,
+		"jimmSeq":null,
+		"mode" : null,
+		"layout":function(form){
+			$.fun.ajax({
+				"url":"/ex/professor/index.do",
+				data:form?$(form).serialize():null,
+				"success":function(data){
+					$.fun.layout({
+						"id":"professor_layout",
+						"title":"교수 검색",
+						"width":610,
+						"content":$(data)
+					});
+				}
+			});
+			return false;
+		},
+		"bind":function(param){
+			common.exProfessor.jidProfId.val(param.jidProfId);
+			common.exProfessor.jidProfId.change();
+			if ( common.exProfessor.jimSeq != null ) {
+				if ( common.exProfessor.jidProfId.parents( "tr" ).attr( "id" ).indexOf( "jim_" ) != -1 ) {
+					$( "#jim_" + common.exProfessor.jimSeq ).find( "#" + common.exProfessor.jidProfName.attr( "id" ) ).val( param.jidProfName )
+				}
+			} else {
+				common.exProfessor.jidProfName.val( param.jidProfName );
+			}
+
+			if(common.exProfessor.jidProfDept) common.exProfessor.jidProfDept.val(param.jidProfDept);
+			if(common.exProfessor.jidProfDeptName) common.exProfessor.jidProfDeptName.val(param.jidProfDeptName);
+
+			if(common.exProfessor.mode != null && common.exProfessor.mode == "type1") {
+				$("#deptCode").val(param.jidProfDept)
+				$("#deptName").val(param.jidProfDeptName)
+			}
+
+			$("#professor_layout").dialog('destroy').remove();
+			param.jidSeq=common.exProfessor.jidSeq;
+			param.jimSeq = common.exProfessor.jimSeq;
+			param.jimmSeq=common.exProfessor.jimmSeq;
+			if(common.exProfessor.func) common.exProfessor.func(param);
+			return false;
+		},
+		"search":function(page){
+			var form=document.commonProfessorForm;
+			if(page) form.page.value=page;
+			return common.exProfessor.layout(form);
+		},
+		"init":function(param,jidSeq){
+			common.exProfessor.jidProfId=param.jidProfId;
+			common.exProfessor.jidProfName=param.jidProfName;
+			common.exProfessor.jidProfDept=param.jidProfDept;
+			common.exProfessor.jidProfDeptName=param.jidProfDeptName;
+			common.exProfessor.func=param.func;
+			common.exProfessor.jidSeq=param.jidSeq;
+			if(param.jimSeq != null) common.exProfessor.jimSeq = param.jimSeq;
+			if(param.mode != null) common.exProfessor.mode = param.mode;
+			common.exProfessor.jimmSeq=param.jimmSeq;
+			common.exProfessor.layout(null);
+			return false;
+		},
+		"keydown":function(){
+			if(event.keyCode==13){
+				return common.exProfessor.search(1);
+			}
+		}
+	},
+	"exProfessorAuth" : {
+		"jmId" : null ,
+		"jmName" : null ,
+		"jmTel" : null ,
+		"jmEmail" : null ,
+		"type" : null ,
+		"func" : null ,
+		"layout" : function ( form ) {
+			var form1 = $.extend( form ,{"type" : common.exProfessorAuth.type} );
+			$.fun.ajax( {
+				"url" : "/ex/professorAuth/index.do" ,
+				"data":form?$(form).serialize():form1,
+				"success" : function ( data ) {
+					$.fun.layout( {
+						"id" : "professor_layout" ,
+						"title" : "교직원 검색" ,
+						"width" : 610 ,
+						"content" : $( data )
+					} );
+				}
+			} );
+			return false;
+		} ,
+		"bind" : function ( param ) {
+			console.log( param);
+			common.exProfessorAuth.jmId.val( param.jmId );
+			common.exProfessorAuth.jmName.val( param.jmName );
+			if(common.exProfessorAuth.jmTel != null) common.exProfessorAuth.jmTel.val( param.jmTel );
+			if(common.exProfessorAuth.jmEmail != null) common.exProfessorAuth.jmEmail.val( param.jmEmail );
+			if(param.userGb != null) {
+				if(param.userGb == "조교" ) $("input[name='userGb'][value='5']").click();
+				else $("input[name='userGb'][value='4']").click();
+			}
+			$( "#professor_layout" ).dialog( 'destroy' ).remove();
+			if ( common.exProfessorAuth.func ) common.exProfessorAuth.func( param );
+			return false;
+		} ,
+		"search" : function ( page ) {
+			var form = document.commonProfessorForm;
+			if ( page ) form.page.value = page;
+			return common.exProfessorAuth.layout( form );
+		} ,
+		"init" : function ( param ) {
+			console.log( param )
+			common.exProfessorAuth.jmId = param.jmId;
+			common.exProfessorAuth.jmName = param.jmName;
+			common.exProfessorAuth.jmTel = param.jmTel;
+			common.exProfessorAuth.jmEmail = param.jmEmail;
+			common.exProfessorAuth.type = param.type;
+			common.exProfessorAuth.func = param.func;
+			common.exProfessorAuth.layout( null );
+			return false;
+		} ,
+		"keydown" : function () {
+			if ( event.keyCode == 13 ) { return common.exProfessorAuth.search( 1 ); }
+		}
+	} ,
+	"company":{
+		"compSeq":null,
+		"compName":null,
+		"compType":null,
+		"internCodeStr":null,
+		"compZipcode":null,
+		"compAddr1":null,
+		"compAddr2":null,
+		"compNum":null,
+		//<!-- [교수추가] -->
+		"jidProfId":null,
+		"jidProfName":null,
+		"jidProfDept":null,
+		"jimmProfId":null,
+		"jimmProfName":null,
+		"jimmProfDept":null,
+		//<!-- //[교수추가] -->
+		//<!-- [해외구분 20200602]-->
+		"compCountryCode" : null ,
+		"type" : null,
+		"func":null,
+		//<!-- //[해외구분 20200602]-->
+		"layout":function(form){
+			var url = "/company.do";
+			if(common.company.compType != null){
+				url = "/company2.do";
+			}else{
+				url = "/company.do";
+			}
+			$.fun.ajax({
+				"url":url,
+				data:form?$(form).serialize():null,
+				"success":function(data){
+					$.fun.layout({
+						"id":"company_layout",
+						"title":"기관(법인)명 검색",
+						"width":570,
+						"content":$(data)
+					});
+				}
+			});
+			return false;
+		},
+		"bind":function(param){
+			console.log(param);
+
+			common.company.compSeq.val(param.compSeq);
+			common.company.compName.val(param.compName);
+			common.company.internCodeStr.val(param.internCodeStr);
+//			common.company.compNum.val(param.compNum);
+			if (common.company.compZipcode){
+				common.company.compZipcode.val(param.compZipcode);
+				common.company.compAddr1.val(param.compAddr1);
+				common.company.compAddr2.val(param.compAddr2);
+			}
+
+			//<!-- [교수추가] -->
+			if(common.company.jidProfId != null) {
+				common.company.jidProfId.val(param.profId);
+				common.company.jidProfDept.val(param.profDept);
+				common.company.jidProfName.val(param.profName);
+			}
+			if(common.company.jimmProfId != null) {
+				common.company.jimmProfId.val(param.profId);
+				common.company.jimmProfName.val(param.profName);
+				common.company.jimmProfDept.val(param.profDept);
+			}
+
+			//<!--[202103 COOP] 추가-->
+			$("input[name='jcwWorkingDayCd[]']").prop("checked",false);
+			if(param.workCompList != '') {
+
+				for(i=0; i<param.workCompList.split(",").length; i++) {
+					console.log(param.workCompList.split(",")[i]);
+					id = "#jcwWorkingDayCd" +  param.workCompList.split(",")[i];
+					console.log(id);
+					$(id).prop("checked",true);
+				}
+			}
+			//<!--//[202103 COOP] 추가-->
+
+			//<!-- [국내/국외구분 202104] -->
+			if ( param.compCountryCode != null ) {
+				console.log("d");
+				common.company.compCountryCode.val( param.compCountryCode );
+				console.log($("#compCountryCode").val() + "==" + common.company.type)
+				common.country.chn($("#compCountryCode").val(),common.company.type);
+			}
+			//<!-- //[국내/국외구분 202104] -->
+
+			if(common.company.func) common.company.func(param);
+			$("#company_layout").dialog('destroy').remove();
+			return false;
+		},
+		"search":function(page){
+			var form=document.compSearchForm;
+			if(page) form.page.value=page;
+			return common.company.layout(form);
+		},
+		"init":function(param){
+			console.log(param)
+			common.company.compSeq=param.compSeq;
+			common.company.compName=param.compName;
+			common.company.compType=param.compType;
+			common.company.internCodeStr=param.internCodeStr;
+			common.company.compZipcode=param.jidZipcode;
+			common.company.compAddr1=param.jidAddr1;
+			common.company.compAddr2=param.jidAddr2;
+
+
+			//<!-- [교수추가] -->
+			if(param.jidProfId != null) {
+				common.company.jidProfId = param.jidProfId;
+				common.company.jidProfName = param.jidProfName;
+				common.company.jidProfDept = param.jidProfDept;
+			}
+			if(param.jimmProfId != null) {
+				common.company.jimmProfId = param.jimmProfId;
+				common.company.jimmProfName = param.jimmProfName;
+				common.company.jimmProfDept = param.jimmProfDept;
+			}
+			//<!-- //[교수추가] -->
+
+			//<!-- [국내/국외구분 202104] -->
+			if ( param.compCountryCode != null ) {
+				common.company.compCountryCode = param.compCountryCode;
+			}
+			if ( param.type != null ) {
+				common.company.type = param.type;
+			}
+			//<!-- //[국내/국외구분 202104] -->
+
+			if(param.func != null) common.company.func=param.func;
+
+//			common.company.compNum=param.compNum;
+			common.company.layout(null);
+			return false;
+		},
+		"keydown":function(inp){
+			$(inp).keydown(function(event){
+				if(event.which==13)
+					common.company.layout(document.compSearchForm);
+			});
+		}
+	},
+	"exDept":{
+		"title":null,
+		"deptCode":null,
+		"deptName":null,
+		"jsType":null,
+		"mode" : "type1",
+		"layout":function(form){
+			var form1 = $.extend( form ,{"mode" : common.exDept.mode} );
+			$.fun.ajax({
+				"url":"/ex/dept/index.do",
+				"data":form?$(form).serialize():form1,
+				"success":function(data){
+					$.fun.layout({
+						"id":"dept_layout",
+						"title":common.exDept.title==null?"주관부서 검색":common.exDept.title,
+						"width":600,
+						"content":$(data)
+					});
+				}
+			});
+			return false;
+		},
+		"bind":function(param){
+			common.exDept.deptCode.val(param.deptCode);
+			common.exDept.deptName.val(param.deptName);
+			$("#dept_layout").dialog('destroy').remove();
+			exDeptCallback(param);
+			return false;
+		},
+		"search":function(page){
+			var form=document.commonDeptForm;
+			if(page) form.page.value=page;
+			return common.exDept.layout(form);
+		},
+		"init":function(param){
+			common.exDept.title=param.title;
+			common.exDept.deptCode=param.deptCode;
+			common.exDept.deptName=param.deptName;
+			common.exDept.jsType=param.jsType;
+			if ( common.exDept.mode != null ) common.exDept.mode=param.mode;
+			common.exDept.layout(null);
+			return false;
+		},
+		"keydown":function(){
+			if(event.keyCode==13){
+				return common.exDept.search(1);
+			}
+		}
+	},
+	//<!--[202103 COOP] 추가-->
+	"ksic" : {
+		"compKsicCd" : null ,
+		"compKsicNm" : null ,
+		"layout" : function ( form ) {
+			console.log("/////form//////");
+			console.log(form);
+			$.fun.ajax( {
+				"url" : "/common/ksic/index.do" ,
+				data : form ? $( form ).serialize() : null ,
+				"success" : function ( data ) {
+					$.fun.layout( {
+						"id" : "ksic_layout" ,
+						"title" : "한국표준산업분류코드",
+						"width" : 610 ,
+						"content" : $( data )
+					} );
+				}
+			} );
+			return false;
+		} ,
+		"bind" : function ( param ) {
+			if ( common.ksic.compKsicCd != undefined && common.ksic.compKsicCd != "" ) common.ksic.compKsicCd.val( param.compKsicCd );
+			if ( common.ksic.compKsicNm != undefined && common.ksic.compKsicNm != "" ) common.ksic.compKsicNm.val( param.compKsicNm );
+			$( "#ksic_layout" ).dialog( 'destroy' ).remove();
+			exDeptCallback( param );
+			return false;
+		} ,
+		"search" : function ( page ) {
+			var form = document.commonKsicForm;
+			if ( page ) form.page.value = page;
+			return common.ksic.layout( form );
+		} ,
+		"init" : function ( param ) {
+			console.log("///////////");
+			console.log(param);
+			common.ksic.compKsicCd = param.compKsicCd;
+			common.ksic.compKsicNm = param.compKsicNm;
+			common.ksic.layout( null );
+			return false;
+		} ,
+		"keydown" : function () {
+			if ( event.keyCode == 13 ) { return common.ksic.search( 1 ); }
+		}
+	} ,
+	//<!--//[202103 COOP] 추가-->
+	"workdayView":function(jimSeq,defaultDate){
+		var buttons={
+			/*"프린트":{
+				"text":'프린트',
+				'class':'ok',
+				"click":function(){
+					print.attendance(jimSeq);
+				}
+			},*/
+			"닫기":{
+				"text":'닫기',
+				'class':'close',
+				"click":function(){
+					$("#WORKDAY_VIEW").dialog('destroy').remove();
+				}
+			}
+		};
+		$.fun.layout({
+			"id":"WORKDAY_VIEW",
+			"buttons":buttons,
+			"title":"출근부 확인",
+			"width":400,
+			"position":[
+					"center",50
+			],
+			"content":$("<div class='CALENDAR_VIEW'><div>"),
+			"open":function(){
+				$("#WORKDAY_VIEW").find(".CALENDAR_VIEW").fullCalendar({
+					monthNames:[
+							'1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'
+					],
+					monthNamesShort:[
+							'1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'
+					],
+					dayNames:[
+							'일요일','월요일','화요일','수요일','목요일','금요일','토요일'
+					],
+					dayNamesShort:[
+							'일','월','화','수','목','금','토'
+					],
+					defaultDate:defaultDate,
+					buttonText:{
+						prev:'<',
+						next:'>',
+						today:'today',
+						month:'월별',
+						week:'주별',
+						day:'일별',
+						gotoDate:'이동'
+					},
+					header:{
+						left:'',
+						center:'prev title next',
+						right:''
+					},
+					selectable:false,
+					selectHelper:false,
+					editable:false,
+					events:{
+						url:"/student/report/weekly/workday.do",
+						type:'POST',
+						data:{
+							"jimSeq":jimSeq
+						}
+					}
+				});
+			}
+		});
+	},
+	//<!--[202103 COOP] 추가-->
+	"workdayViewNew" : function ( jimSeq ,thisDate ) {
+		$.fun.ajax( {
+			"url" : "/common/layout/workdayView.do" ,
+			"data" : {
+				"jimSeq" : jimSeq ,
+				"thisDate" : thisDate
+			} ,
+			"success" : function ( data ) {
+				$.fun.layout( {
+					"id" : "workdayView_LAYOUT" ,
+					"title" : "출석부 확인" ,
+					"width" : 650 , // 퍼블 수정
+					"content" : $( data )
+				} );
+			}
+		} );
+		return false;
+	} ,
+	//<!--//[202103 COOP] 추가-->
+	"plan":function(jidSeq){
+		var param={
+				jidSeq:jidSeq
+		}
+		$.get("/common/plan.do",param,function(r){
+			$.fun.layout({
+				"id":"planPopup",
+				"title":"운영계획서",
+				"width":800,
+				"content":r,
+				"buttons":{
+					"닫기":function(){
+						$(this).dialog('destroy').remove();
+					}
+				}
+			});
+		});
+		return false;
+	},
+	"ncsPlan":function(jidSeq,jimSeq){
+		var param={
+				jidSeq:jidSeq
+				,jimSeq:jimSeq
+		}
+		$.get("/common/ncsPlan.do",param,function(r){
+			$.fun.layout({
+				"id":"ncsPlanPopup",
+				"title":"수행준거",
+				"width":512,
+				"content":r,
+				"buttons":{
+					"닫기":function(){
+						$(this).dialog('destroy').remove();
+					}
+				}
+			});
+		});
+		return false;
+	},
+	"dateChange" : function(jidSeq,target){
+		console.log("ddd")
+		console.log(jidSeq);
+		console.log(target);
+		if($("input[name='"+target+"']").val() == "") {
+			$.fun.alert({
+				"content":"변경할 날짜를 입력해주세요"
+			});
+			return false;
+		}
+		var jidEDate = $("input[name='"+target+"']").val();
+		$.fun.confirm({
+			"content":"실습기간 마지막일자를 변경하시겠습니까?",
+			"action":function(){
+				$.fun.ajax({
+					"url":"/dateChange.do",
+					"data": {"jidSeq" : jidSeq
+							,"jidEDate" : jidEDate
+							},
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						console.log(data);
+
+						if(data["result"] > 0){
+							$.fun.alert({
+								"content":"요청하신 작업이 완료되었습니다.",
+							});
+							location.reload();
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+					}
+				});
+				return false;
+			}
+		});
+	},
+	"paperReProc" : function(jimSeq,paperReYn) {
+		$.fun.confirm({
+			"content":"서류보완 재지원 하시겠습니까?",
+			"action":function(){
+				$.fun.ajax({
+					"url":"/paperReProc.do",
+					"data": {
+							"jimSeq" : jimSeq
+							,"paperReYn":paperReYn
+					},
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						console.log(data);
+						if(data["result"]){
+							$.fun.alert({
+								"content":"서류보완 재지원이 완료되었습니다.",
+								"action" : function () {
+									location.reload();
+								}
+							});
+
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+						$(this).dialog('destroy').remove();
+					}
+				});
+				return false;
+			}
+		});
+	},
+	// <!-- [enterTab]-->
+	 "enterTab" : {
+		"init" : function(target) {
+			$(target).find("input[type='text'],input[type='password']").each(function(i){
+				enterList[i] = $(this).attr("name");
+			});
+			enterCnt = $(target).find("input[type='text'],input[type='password']").length;
+			common.enterTab.action(target);
+		},
+		"action" : function(target) {
+			$(document).on("keyup","input", function(event){
+				if(event.keyCode==13){
+					var $thisName = $(this).attr("name");
+					$.each(enterList,function(index,entry){
+						if(entry == $thisName && index < enterCnt-1) {
+							console.log(index);
+							console.log(entry);
+							$(target).find("input[name='"+enterList[index+1]+"']").focus();
+						}
+					});
+				}
+			})
+		}
+	},
+	// <!-- //[enterTab]-->
+	// <!-- [참여신청서 휴일관리] -->
+	"att" : {
+		"init" : function(target) {
+			$(target).each(function(){
+				startDate = $(this).find("input[name='jidcSDate']").val();
+				endDate = $(this).find("input[name='jidcEDate']").val();
+				title = $(this).find("input[name='jidcTitle']").val();
+				common.att.closeData(startDate,endDate,title);
+			});
+		},
+		"closeData" : function(startDate,endDate,title){
+			$(".tbl_calendar").find("input[name='workday[]']").each(function(){
+				if(startDate <= $(this).val() && endDate >= $(this).val()) {
+					$( "input:radio[name='workday"+$(this).val()+"']:radio[value='S']" ).prop( "checked" ,true );
+					$( "input:radio[name='workday"+$(this).val()+"']" ).attr( "onclick" ,"return false;" );
+					$( "input:radio[name='workday"+$(this).val()+"']" ).parent().prepend( "<span class='dk_alert_r'>"+title+"</span>" );
+					$( "input:radio[name='workday"+$(this).val()+"']" ).parent("td").css("background-color" , "#f5f5f5");
+				}
+			});
+		}
+	},
+	//<!-- [참여신청서 휴일관리] -->
+	"comma" : function ( num ) {
+		num = num.replaceAll( "," ,"" );
+		console.log( num );
+		var len ,point ,str;
+		num = num + "";
+		point = num.length % 3;
+		len = num.length;
+		str = num.substring( 0 ,point );
+		while ( point < len ) {
+			if ( str != "" ) str += ",";
+			str += num.substring( point ,point + 3 );
+			point += 3;
+		}
+		return str;
+	} ,
+	"commaVal" : function ( target ,num ) {
+		$( target ).val( common.comma( num ) );
+	},
+	//<!-- 이력서가져오기 [20200506] -->
+	"import" : {
+		"list" : function(url,title,stNum,mode) {
+			var buttons = { "닫기" : function () { $( this ).dialog( 'destroy' ).remove(); }}
+			$.fun.ajax( {
+				"url" : url ,
+				"data" : {
+					"stNum" : stNum
+					,"mode" : mode
+				} ,
+				"success" : function ( data ) {
+					if($(data).find("input[name='recSeq[]']").length > 0) {
+						buttons = {
+									"저장" : function () { common.import.proc(stNum,mode); } ,
+									"닫기" : function () { $( this ).dialog( 'destroy' ).remove(); }
+								}
+					}
+
+					$.fun.layout( {
+						"id" : "RECORD_LAYOUT" ,
+						"title" : title + " 가져오기" ,
+						"width" : 900 ,
+						"content" : $( data ) ,
+						"buttons" : buttons
+					} );
+				}
+			} );
+			return false;
+		},
+		"proc" : function(stNum,mode){
+			var checkboxInfo=$.fun.checkboxInfo("recSeq[]");
+			if(!checkboxInfo.checked){
+				$.fun.alert({
+					"content":"대상을 선택 해주세요.",
+					"action":function(){
+						checkboxInfo.firstNode.focus();
+					}
+				});
+				return false;
+			}
+			var data = {};
+			data.recordJSON = $.fun.json_decode( checkboxInfo.checkedList );
+			data.stNum = stNum;
+			data.mode = mode;
+			console.log(data);
+			$.fun.confirm( {
+				"content" : "선택한 항목을 추가하시겠습니까?" ,
+				"action" : function () {
+					$.fun.ajax( {
+						"url" : "/common/record/proc.do",
+						"data" : data ,
+						"success" : function ( data ) {
+							data = $.fun.json_encode( data );
+							console.log( data );
+							if ( data[ "result" ] ) {
+								$.fun.alert( {
+									"content" : "요청하신 작업이 완료되었습니다." ,
+									"action" : function () {
+										location.reload();
+									}
+								} );
+							} else {
+								$.fun.alert( {
+									"content" : "요청이 실패되었습니다."
+								} );
+							}
+						}
+					} );
+					return true;
+				}
+			} );
+			return false;
+		},
+		// 언어능력
+		"init" : function( mode,stNum,title ) {
+			common.import.list("/common/layout/stdRecord.do",title,stNum,mode);
+		}
+	},
+	//<!-- //이력서가져오기 [20200506] -->
+	"numChk" : function (req) {
+		if ( ( event.keyCode > 47 && event.keyCode < 58 ) || ( event.keyCode == 8 ) || ( event.keyCode == 9 ) || ( event.keyCode > 95 && event.keyCode < 106 ) || ( event.keyCode == 46 ) ) {} else {
+			$( ".onlynum" ).keyup( function () {
+				$( this ).val( $( this ).val().replace( /[^0-9]/g ,"" ) );
+			} );
+			$.fun.alert( {
+				"content" : "숫자만 입력해주세요."
+			} );
+		}
+	} ,
+	"multiFile" : {
+		"upload":function(obj, indexCnt,level){
+			common.upload(function(data){
+				var root=$(obj).parents(".contentArea");
+				if(!root.find("[name='comUpload"+level+"_"+indexCnt+"']").length){
+					root.append("<input type='hidden' name='comUpload"+level+"_"+indexCnt+"'/>");
+				}
+				console.log(level);
+				console.log(".comFileNm"+level+"_"+indexCnt);
+				root.find("[name='comUpload"+level+"_"+indexCnt+"']").val($.fun.json_decode(data));
+				root.find(".comFileNm"+level+"_"+indexCnt).val(data.orignlFileNm);
+			});
+			return false;
+		},
+		"addFile":function(obj, cnt, level,filNmCls){
+			var root=$(obj).parents(".multiMain");
+			var fileArea = root.find(".contentArea").first().clone();
+			var len = root.find( ".contentArea").length;
+			console.log(len);
+			fileArea.addClass("mt_4");
+			fileArea.find( "input[name='dataSeq"+level+"[]']").val("0");
+			fileArea.find( "input[name='content"+level+"[]']").val("");
+			fileArea.find( "input[name='comFileSn"+level+"_0']").attr("name","comFileSn"+level+"_"+len).val("");
+			fileArea.find( "input[name='comFileSn"+level+"_0']").attr("name","comFileSn"+level+"_"+len);
+
+			fileArea.find( ".comFileNm"+level+"_0").attr("class",filNmCls+" mr_4 comFileNm"+level+"_"+len).val("");
+			fileArea.find( "input[name='comFileSn"+level+"_0']").attr("name","comFileSn"+level+"_"+len);
+			fileArea.find( ".find").attr("onclick","common.multiFile.upload(this,'"+len+"','"+level+"')");
+			fileArea.find( ".add_item").attr("onclick","common.multiFile.addFile(this,'"+len+"','"+level+"','"+filNmCls+"')");
+			fileArea.find( "input[name^='comUpload"+level+"']").remove();
+			fileArea.append("<a href=\"#;\" onclick=\"return common.multiFile.delFile(this,'"+len+"','"+level+"');\" class=\"delete_entry mr_4\"><span class=\"blind\">항목삭제</span></a>")
+			root.append( fileArea );
+			return false;
+		},
+		"delFile" : function ( obj, cnt, level ) {
+			var root = $( obj ).parents(".contentArea");
+			var fcnt = $( obj ).parents(".contentArea").index();
+
+			// 삭제 시퀀스
+			var delSeq = root.find("input[name^='dataSeq']").clone();
+			delSeq.prop("name",delSeq.attr("name").replace("data","del"));
+			root.parents(".multiMain").find(".delArea"+level).append(delSeq);
+
+			// 삭제파일
+			if(root.find("input[name^='comFileSn']").length > 0) {
+				var delFile = root.find("input[name^='comFileSn']").clone();
+				delFile.prop("name",delFile.attr("name").replace("com","del"))
+				$(obj).parents(".multiMain").find(".delArea"+level).append(delFile);
+			}
+			root.remove();
+
+			$(obj).parents(".multiMain").find(".contentArea").each(function(i,e){
+				$(this).find("input[name^=comFileSn]").attr("name","comFileSn"+cnt+"_"+i);											// 파일시퀀스 변경
+				$(this).find(".comFileNm").attr("class","comFileNm"+cnt+"_"+i);														// 파일이름명 변경
+				$(this).find(".find").attr("onclick","return common.multiFile.upload(this,'"+i+"','"+level+"')");				// 파일업로드(이벤트)
+				$(this).find(".add_item").attr("onclick","return common.multiFile.addFile(this,'"+i+"','"+level+"')");			// 파일추가(이벤트)
+				$(this).find("input[name^=comUpload]").attr("name","comUpload"+cnt+"_"+i);											// 파일업로드명 변경
+				if(i > 0) {
+					$(this).find(".delete_entry").attr("onclick","return common.multiFile.delFile(this,'"+i+"','"+level+"')");	// 삭제(이벤트)
+				}
+			});
+			return false;
+
+		} ,
+	}
+
+};
+
+function exDeptCallback(){
+
+}
+// 인쇄
+var x = window.screen.width;
+var y = window.screen.height;
+var print_={
+	"url":{
+		"attendance":"/common/print/attendance.do",
+		"valuation":"/common/print/valuation.do",
+		"stdTotalReport":"/common/print/stdTotalReport.do",
+		"joinConfirmation":"/common/print/joinConfirmation.do",
+		"joinRequest":"/common/print/joinRequest.do",
+		"resume":"/common/print/resume.do",
+		"jobStudentDetail":"/common/print/jobStudentDetail.do",
+		// <!-- 학생이력관리 [20190412] -->
+		"jobStudentDetailReal":"/common/print/jobStudentDetailReal.do",
+		// <!-- //학생이력관리 [20190412] -->
+		"visitReport":"/common/print/visitReport.do",
+		"visitReportMatch":"/common/print/visitReportMatch.do",
+		"visitReport2":"/common/print/visitReport2.do",
+		"visitReportMatchMulti" : "/common/print/visitReportMatchMulti.do",
+		"agreement":"/common/print/agreement.do",
+		"valuationIntern":"/common/print/valuationIntern.do",
+		"stdTotalReportIntern":"/common/print/stdTotalReportIntern.do",
+		"isuReport":"/common/print/isuReport.do",
+		"ncsPrint":"/common/print/ncsPrint.do",
+		"suyak":"/common/print/suyak.do",
+		"ncsVal":"/common/print/ncsValPrint.do",
+		"plan":"/common/print/plan.do",
+		"threeAgreement" : "/common/threeAgreement.do",
+		"threeAgreement" : "/common/threeAgreement.do",
+		//<!--[202103 COOP] 추가-->
+		"attendanceNew" : "/common/print/attendanceNew.do" ,
+		"valuationNew" : "/common/print/valuationNew.do" ,
+		"stdTotalReportNew" : "/common/print/stdTotalReportNew.do" ,
+		"totalPrintNew" : "/common/print/totalPrintNew.do" ,
+		"stAllReport" : "/common/print/stAllReport.do" ,			// 학생종합 출력
+		"stWeeklyReport" : "/common/print/stWeeklyReport.do" ,		// 주간보고서 출력
+		"stTotReport" : "/common/print/stTotReport.do" ,			// 종합보고서 출력
+		"stFeedbackReport" : "/common/print/stFeedbackReport.do" ,	// 실습후기 출력
+		"FieTrainAppliFormNew" : "/common/print/FieTrainAppliFormNew.do" ,
+		"threeAgreementNew" : "/common/threeAgreementNew.do",
+		"agreeInfoPrint" : "/common/print/agreeInfoPrint.do",
+		"reviewTestPrint" : "/common/print/reviewTestPrint.do",
+		"inspect" : "/common/print/inspect.do",
+		//<!--//[202103 COOP] 추가-->
+		"totalVisitReport" : "/common/print/totalVisitReport.do"
+	},
+	"imsiMessage" : function() {
+		$.fun.alert({
+			"content":"준비중입니다"
+		});
+	},
+	// 출근부
+	"attendance":function(jimSeq,stNum){
+		window.open(print_.url.attendance+"?jimSeq="+jimSeq+"&id="+stNum,"attendance",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 평가표
+	"valuation":function(jimSeq){
+		window.open(print_.url.valuation+"?jimSeq="+jimSeq,"valuation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 인턴쉽 (장기)평가표
+//	"valuationIntern":function(jimSeq){
+//		window.open(print_.url.valuationIntern+"?jimSeq="+jimSeq,"valuationIntern",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width='+ x + 'px, height='+ y +'px');
+//		print_.imsiMessage();
+//	},
+	// 결과보고서 (NCS 일반)
+	"stdTotalReport":function(jimSeq, id, jsSeq){
+		window.open(print_.url.stdTotalReport+"?jimSeq="+jimSeq+"&id="+id+"&jsSeq="+jsSeq,"stdTotalReport",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 참여확인서
+	"joinConfirmation":function(jimSeq, id, jsSeq){
+		window.open(print_.url.joinConfirmation+"?jimSeq="+jimSeq+"&id="+id+"&jsSeq="+jsSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 참여신청서
+	"joinRequest":function(jimSeq,jsSeq){
+		window.open(print_.url.joinRequest+"?jimSeq="+jimSeq+"&jsSeq="+jsSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 이수확인서
+	"isuReport":function(jimSeq){
+		window.open(print_.url.isuReport+"?jimSeq="+jimSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 이력서
+	"resume":function(stSeq){
+//		window.open(print_.url.resume+"?stSeq="+stSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+		print_.imsiMessage();
+	},
+	// 이력서/자기소개서
+	"jobStudentDetail":function(stSeq){
+		window.open(print_.url.jobStudentDetail+"?stSeq="+stSeq+"&type=1","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+//		print_.imsiMessage();
+	},
+	// 이력서/자기소개서(이력서만)
+	"jobStudentDetail2":function(stSeq){
+//		window.open(print_.url.jobStudentDetail+"?stSeq="+stSeq+"&type=2","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+		print_.imsiMessage();
+	},
+	// 이력서/자기소개서(소개서만)
+	"jobStudentDetail3":function(stSeq){
+//		window.open(print_.url.jobStudentDetail+"?stSeq="+stSeq+"&type=3","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+		print_.imsiMessage();
+	},
+
+	// <!-- 학생이력관리 [20190412] -->
+	// 이력서/자기소개서
+	"jobStudentDetailReal":function(stSeq,jimSeq){
+		window.open(print_.url.jobStudentDetailReal+"?stSeq="+stSeq+"&jimSeq="+jimSeq+"&type=1","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 이력서/자기소개서(이력서만)
+	"jobStudentDetail2Real":function(stSeq,jimSeq){
+		window.open(print_.url.jobStudentDetailReal+"?stSeq="+stSeq+"&jimSeq="+jimSeq+"&type=2","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 이력서/자기소개서(소개서만)
+	"jobStudentDetail3Real":function(stSeq,jimSeq){
+		window.open(print_.url.jobStudentDetailReal+"?stSeq="+stSeq+"&jimSeq="+jimSeq+"&type=3","joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// <!-- //학생이력관리 [20190412] -->
+
+	// 중간보고서
+	"visitReport":function(jirNum, jirSeq, jsSeq){
+		window.open(print_.url.visitReport+"?jirNum="+jirNum+"&jirSeq="+jirSeq+"&jsSeq="+jsSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	// 매칭결과보고서
+	"visitReportMatch":function(jirNum, jirSeq, jsSeq){
+		window.open(print_.url.visitReportMatch+"?jirNum="+jirNum+"&jirSeq="+jirSeq+"&jsSeq="+jsSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+
+	"agreement":function(imgNo, compSeq, jidSeq, mode, type, stSeq, jimSeq){
+	console.log("//");
+	 console.log(imgNo);
+//		console.log(document.body.clientHeight);
+//		console.log(document.body.clientWidth);
+		window.open(print_.url.agreement+"?imgNo="+imgNo+"&compSeq="+compSeq+"&jidSeq="+jidSeq+"&mode="+mode+"&jimSeq="+jimSeq+ "&type="+type+(stSeq != undefined ? "&stSeq="+stSeq : ""),"stdTotalReport",'toolbar=no, location=no, left=100, top=100, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	//NCS 수행준거출력
+	"ncsPrint":function(jimSeq, jtrSeq, currentList, jsSeq){
+		window.open(print_.url.ncsPrint+"?jimSeq="+jimSeq+"&jtrSeq="+jtrSeq+"&currentList="+currentList+"&jsSeq="+jsSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+//		print_.imsiMessage();
+	},
+	"ncsVal":function(ncsCode, jidSeq, jimSeq, deptCode){
+		window.open(print_.url.ncsVal+"?ncsCode="+ncsCode+ "&jidSeq=" + jidSeq + "&jimSeq="+jimSeq+"&deptCode="+deptCode,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px');
+	},
+	"plan": function(jidSeq,jimSeq,type) {
+		window.open(print_.url.plan+"?jidSeq="+jidSeq+ "&jimSeq=" + jimSeq + "&type="+type,"plan",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=512px, height=600px');
+	},
+	//<!--[202103 COOP] 변경-->
+	"threeAgreement" : function ( jimSeq ,jsCoopYn) {
+		if(jsCoopYn == "Y") {
+			window.open( print_.url.threeAgreementNew + "?jimSeq=" + jimSeq + "&jsCoopYn=" + jsCoopYn ,"threeAgreementNew" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+		} else {
+			window.open( print_.url.threeAgreement + "?jimSeq=" + jimSeq ,"threeAgreement" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+		}
+	} ,
+	//<!--//[202103 COOP] 변경-->
+	//<!--[202103 COOP] 추가-->
+	// 출근부
+	"attendanceNew" : function ( jimSeq ,stNum ) {
+		window.open( print_.url.attendanceNew + "?jimSeq=" + jimSeq + "&id=" + stNum ,"attendance" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	// 평가표
+	"valuationNew" : function ( jimSeq ) {
+		window.open( print_.url.valuationNew + "?jimSeq=" + jimSeq ,"valuation" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	"stdTotalReportNew" : function ( jimSeq, jsSeq ) {
+		window.open( print_.url.stdTotalReportNew + "?jimSeq=" + jimSeq + "&jsSeq=" + jsSeq ,"stdTotalReport" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=750px, height=850px' );
+	} ,
+
+	"stAllReport" : function ( jimSeq ,id ,jsSeq ) {
+		window.open( print_.url.stAllReport + "?jimSeq=" + jimSeq + "&id=" + id + "&jsSeq=" + jsSeq ,"stAllReport" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=720px, height=850px' );
+	} ,
+	"stWeeklyReport" : function ( jimSeq ,id ,jsSeq ) {
+		window.open( print_.url.stWeeklyReport + "?jimSeq=" + jimSeq + "&id=" + id + "&jsSeq=" + jsSeq ,"stWeeklyReport" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=720px, height=850px' );
+	} ,
+	"stTotReport" : function ( jimSeq ,id ,jsSeq ) {
+		window.open( print_.url.stTotReport + "?jimSeq=" + jimSeq + "&id=" + id + "&jsSeq=" + jsSeq ,"stTotReport" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=720px, height=850px' );
+	} ,
+	"stFeedbackReport" : function ( jimSeq ,id ,jsSeq ) {
+		window.open( print_.url.stFeedbackReport + "?jimSeq=" + jimSeq + "&id=" + id + "&jsSeq=" + jsSeq ,"stFeedbackReport" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	/*"totalPrintNew" : function ( formData ) {
+		window.open( print_.url.totalPrintNew + "?formData=" + formData ,"attendance" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,*/
+	"totalPrintNew" : function () {
+		var checkboxInfo = $.fun.checkboxInfo( "jimSeq[]" );
+		if(checkboxInfo.checked == 0) {
+			$.fun.alert( {
+				"content" : "학생을 선택해주세요."
+			} );
+			return false;
+		}
+		var jimSeq = checkboxInfo.checkedList;
+		window.open( print_.url.totalPrintNew + "?jimSeq=" + jimSeq,"attendance" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=700px, height=850px' );
+	} ,
+	"FieTrainAppliFormNew" : function ( jidSeq ) {
+		window.open( print_.url.FieTrainAppliFormNew + "?jidSeq=" + jidSeq ,"FieTrainAppliForm" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	"agreeInfoPrint" : function ( id, group, jsYear ) {
+		if(typeof jsYear === "undefined"){
+			jsYear = 0;
+		}
+		console.log(id);
+		window.open( print_.url.agreeInfoPrint + "?id=" + id + "&group=" + group + "&jsYear=" + jsYear ,"agreeInfoPrint" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	"reviewTestPrint" : function ( jidSeq ) {
+		window.open( print_.url.reviewTestPrint + "?jidSeq=" + jidSeq ,"reviewTestForm" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	} ,
+	"inspect" : function ( compSeq ) {
+		window.open( print_.url.inspect + "?compSeq=" + compSeq ,"inspect" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=670px, height=850px' );
+	},
+	"totalVisitReport" : function (jsSeq) {
+		var checkboxInfo = $.fun.checkboxInfo( "jirSeq[]" );
+		var jirNum = [];
+		if(checkboxInfo.checked == 0) {
+			$.fun.alert( {
+				"content" : "학생을 선택해주세요."
+			} );
+			return false;
+		}
+		$("input[name='jirSeq[]']:checked").each(function(idx,item){
+			jirNum.push($(item).next().val());
+		});
+		var jirSeq = checkboxInfo.checkedList;
+		window.open( print_.url.totalVisitReport + "?jirSeq=" + jirSeq + "&jirNum=" + jirNum + "&jsSeq=" + jsSeq, "attendance" ,'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width=700px, height=850px' );
+	}
+
+	//<!--//[202103 COOP] 추가-->
+	//서약서 출력
+//	"suyak":function(jimSeq){
+//		window.open(print_.url.suyak+"?jimSeq="+jimSeq,"joinConfirmation",'toolbar=no, location=no, left=0, top=0, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width='+ x + 'px, height='+ y +'px');
+//	}
+};
+var commNcs = {
+		"init":function(){
+			$.fun.rowspan("#ncsTable", 0);
+			$.fun.rowspan("#ncsTable", 1);
+			commNcs.btnCheck();
+			if($("#ncsDept") != null){
+				commNcs.ncsDept = $("#ncsDept").val();
+			}
+		},
+		"jobNcs":function(ncsCode, jidSeq, jimSeq, deptCode,jsYear){
+			$.fun.ajax({
+				"url":"/jobNcs.do",
+				"data":{
+					"ncsCode":ncsCode,
+					"jidSeq":jidSeq,
+					"jimSeq":jimSeq,
+					"deptCode":deptCode,
+					"jsYear":jsYear
+				},
+				"success":function(data){
+					$.fun.layout({
+						"id":"ncs_LAYOUT",
+						"title":"직업기초능력",
+						"width":1200,
+						"content":data,
+						"buttons":{
+							"닫기":function(){
+								$(this).dialog('destroy').remove();
+							}
+						}
+					});
+				}
+			});
+			return false;
+		},
+		//선택된 운영계획서 주차
+		"ncsW":null,
+		//선택된 운영계획서 학과
+		"ncsDept":null,
+		//운영계획서 주차 선택시 저장
+		"ncsWfn":function(ncsW){
+			commNcs.ncsW = ncsW;
+		},
+		//선발대상선택 유무 체크
+		"ncsDeptMsg":function(){
+			if(commNcs.ncsDept != null){
+				if(commNcs.ncsWmsg()) return true
+				else return false;
+			}else{
+				$.fun.alert({
+					"content":"선발대상을 선택해주세요."
+				});
+				return true;
+			}
+		},
+		//운영계획서 주차선택 유무 체크
+		"ncsWmsg":function(){
+			if(commNcs.ncsW != null){
+				return false;
+			}else{
+				$.fun.alert({
+					"content":"주차를 선택해주세요."
+				});
+				return true;
+			}
+		},
+		//수행준거 추가
+		"ncsAdd":function(obj){
+			if(commNcs.ncsDeptMsg()) return;
+			var text = $(obj).parent().prev().text();
+			var seq = $(obj).attr("id").replace("addBtn", "");
+			var str = "";
+			str = str + '<tr><td><input type="hidden" name="ncsCode_' + $(commNcs.ncsW).val() + '[]" value="' + seq + '"/>';
+			str = str + '<input type="hidden" name="ncsText_' + $(commNcs.ncsW).val() + '[]" value="' + text + '"/>';
+			//str = str + '<tr><td><input type="hidden" name="ncsData" value="' + seq + '"/>';
+			str = str + text + '</td><td class="tac last"><a href="javascript:;" class="btn_inner ncsDel" onclick="commNcs.ncsDel(this, \'' + seq + '\')"><span class="btn_txt">삭제</span></a></td></tr>';
+			$(commNcs.ncsW).parent().next().find("tbody").append(str);
+			commNcs.btnCheck();
+		},
+		//수행준거 다중 추가
+		"ncsAddArr":function(obj, num){
+			if(commNcs.ncsDeptMsg()) return;
+			seq = ($(obj).attr("id") + "").replace("addBtn", "")
+			$(".addBtn").each(function(index){
+				var aSeq = ($(this).attr("id") + "").replace("addBtn", "").substring(0,num);
+				//중분류값이 같고 %% 키값이 2자리이상 && 버튼이 숨겨지지않은것
+				if(seq == aSeq && ($(this).attr("id") + "").replace("addBtn", "").length > 2 && $(this).css("display") != "none"){
+					commNcs.ncsAdd($(this), $(this).attr("id").replace("addBtn", ""));
+				}
+			});
+			commNcs.btnCheck();
+		},
+		//수행준거삭제
+		"ncsDel":function(obj, seq){
+			$(obj).closest("tr").remove();
+			$("#addBtn" + seq).show();
+			$("#addBtn" + seq.substring(0, 2)).show();
+			$("#addBtn" + seq.substring(0, 1)).show();
+		},
+		// 수행준거 리스트 추가
+		"ncsPlusAdd" : function(req){
+			var target = "#ncsTbody";
+			var lens = $(".plusData").length;
+			var lastName="";
+			if($(".plusData").length == 0) {
+				deptCode="01";
+			} else {
+				lastName = parseInt($(".plusData:eq("+(lens-1)+")").find("a").attr("id").substring(18,20)) + 1;
+				if(lastName.toString().length <= 1) deptCode = '0' + lastName;
+			}
+			var str = str + "<tr>"
+				+ '<td colspan="3">' + $(req).parent().prev().find("input[name='contents']").val()
+				+ '<input type="hidden" name="contentsPlus[]" value="'+ $(req).parent().prev().find("input[name='contents']").val() +'">'
+				+ '<input type="hidden" name="deptCodePlus[]" value="' + deptCode + '">'
+				+ '</td>'
+				+ '<td class="tac last plusData">'
+				+ '<a href="javascript:;" id="addBtn' + '111111111111' + deptCode + '" class="btn_inner addBtn" onclick="commNcs.ncsAdd(this);"><span class="btn_txt">적용</span></a>'
+				+ '</td>'
+				+ '</tr>';
+			$(target).append(str);
+		},
+		"ncsPlusDel" : function(req){
+			$(req).parents("tr").remove();
+		},
+		"ncsProc":function(){
+			document.searchForm.saveAction.value="ncs";
+			reqComp.proc();
+		},
+		//선택된 운영계획서에있는 것들 체크해서 수행준거에서 버튼 삭제
+		"btnCheck":function(){
+//			$(".ncsDel").each(function(index){
+//				var seq = $(this).parent().prev().find("input").eq(0).val();
+//				$("#addBtn" + seq).hide();
+//			});
+//			commNcs.btnCheckArr(1);
+//			commNcs.btnCheckArr(2);
+		},
+		"btnCheckArr":function(num){
+			$(".ncsDel").each(function(index){
+				var seq = $(this).parent().prev().find("input").eq(0).val().substring(0,num);
+				var chk = true;
+				$(".addBtn").each(function(index){
+					var aSeq = ($(this).attr("id") + "").replace("addBtn", "");
+					if(seq == aSeq.substring(0,num) && aSeq.length > 2 && $(this).css("display") != "none"){
+						chk = false;
+					}
+				});
+				if(chk){
+					$("#addBtn" + seq.substring(0,num)).hide();
+				}
+			});
+		}
+	};
+$.fn.serializeObject=function(){
+	var o={};
+	var a=this.serializeArray();
+	$.each(a,function(){
+		if(o[this.name]!==undefined){
+			if(!o[this.name].push){
+				o[this.name]=[
+					o[this.name]
+				];
+			}
+			o[this.name].push(this.value||'');
+		}else{
+			o[this.name]=this.value||'';
+		}
+	});
+	return o;
+};
+$.fn.setObject=function(o){
+	var frm=this;
+	$.each(o,function(n,v){
+		var inp=$(frm).find("[name='"+n+"']");
+		if(o[n].push){
+			$.each(inp,function(i,v){
+				this.value=o[n][i];
+			});
+		}
+		inp.val(v);
+	});
+};
+if(navigator.userAgent.indexOf("WebKit")==-1) var console={
+	log:function(){}
+};
+$(document).ready(function(){
+	jqueryEvent.bind($("BODY"));
+	String.prototype.replaceAll=function(_findValue,_replaceValue){
+		return this.replace(new RegExp(_findValue,"gi"),_replaceValue);
+	};
+
+	// 공백을 '-' 으로 변경
+	$(".tbl_type01 tbody td").each(function(){
+		if(!$(this).html().trim()) $(this).html("-");
+	});
+});
+//세션유지 6시간마다
+(function(){
+	var session=function(){
+		$.get("/session",function(res){});
+		setTimeout(session,1000*60*10*36);
+	}
+	setTimeout(session,1000*60*10*36);
+})();
+
+
+//<!-- [국내/국외구분 202104] -->
+$( document ).ready( function () {
+	$("#compCountryCode").on("change",function(event){
+		common.country.chn($(this).val(),"COMP");
+	});
+});
+//<!-- //[국내/국외구분 202104] -->
+
+
+//<!-- [202202 SYWORKS전용] -->
+var syworks = {
+	// STEP1 <항목 저장>
+	"save" : function(saveTarget,saveStep) {
+		var writeForm=document.writeForm;
+		$(writeForm).find("input[name='saveTarget']").val("");
+		$(writeForm).find("input[name='saveStep']").val("");
+		$(writeForm).prepend('<input type="hidden" name="saveTarget" value="'+saveTarget+'"/>');
+		$(writeForm).prepend('<input type="hidden" name="saveStep" value="'+saveStep+'"/>');
+		confirmMsg = "저장 하시겠습니까?";
+		if(saveStep == "STEP2") confirmMsg = "[ 기간 및 자동계산된(주,일수) ]를<br/>변경하시겠습니까?";
+		$.fun.confirm({
+			"content":confirmMsg,
+			"action":function(){
+				// 실습지원비(정규실습시간)
+				if($("#newAmountMoney").length > 0) {
+					$("#newAmountMoney").val($("#newAmountMoney").val().replaceAll(',',''));
+				}
+				// 실습지원비(연장실습시간)
+				if($("#newAmountMoneyExtension").length > 0) {
+					$("#newAmountMoneyExtension").val($("#newAmountMoneyExtension").val().replaceAll(',',''));
+				}
+				$.fun.ajax({
+					"url":"/common/syworksProc.do",
+					"data":$( writeForm ).serialize(),
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						console.log(data);
+						if(data["result"]>0){
+							$.fun.alert({
+								"content":"요청하신 작업이 완료되었습니다.",
+								"action":function(){
+									$("#fn_js_confirm").dialog('destroy').remove();
+									location.reload();
+								}
+							});
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+					}
+				});
+				return false;
+			}
+		});
+		return false;
+	},
+	// 선발대상 추가
+	"addMajor":function(){
+		// <!-- [copy] -->
+		var jsType=$("#jsType").val();
+		var maxLen = 20;
+		var ul=$("#JS_ADD_MAJOR");
+
+		if($("[name='majorLi']").length>=maxLen){
+			$.fun.alert({
+				"content":"더 이상 추가 할 수 없습니다."
+			});
+			return false;
+		}
+		var li=ul.children("li:first").clone();
+		li.find("input,select").val("");
+		li.find(".js_add_layout").html('<a href="#" onclick="return req_write.removeMajor($(this));" class="delete_entry ml_5"><span class="blind">항목삭제</span></a>');
+		// <!-- //[copy] -->
+
+		// <!-- customizing -->
+		li.find(".update, .delete").remove();
+		li.append('<a href="javascript:void(0)" onclick="syworks.joinCheck(this,\'insert\');" class="ml_4 btn_inner update"><span class="btn_txt">등록(141)</span></a>');
+		// <!-- //customizing -->
+
+		// <!-- [copy] -->
+		ul.append(li);
+		return false;
+		// <!-- //[copy] -->
+	},
+	// 학과 onclick event 활성화
+	"majorActive" : function(target) {
+		target.find("li").each(function(){
+			if($(this).find("input[name='jimmName[]']").attr("onclick") == undefined) {
+				// <!-- [copy] -->
+				$(this).find("input[name='jimmName[]']").attr("onclick","return common.exDeptManage.init({'noMajorYn':'Y','title':'선발대상검색','colgCd':$(this).prev().prev().prev() ,'colgNm':$(this).prev().prev(),'deptCode':$(this).prev(),'deptName':$(this)})");
+				// <!-- //[copy] -->
+			}
+//			if($(this).find("input[name='jimmProfName[]']").attr("onclick") == undefined) {
+				// <!-- [copy] -->
+//				$(this).find("input[name='jimmProfName[]']").attr("onclick","return common.exProfessor.init({'jidProfId':$(this).prev().prev(),'jidProfName':$(this),'jidProfDept':$(this).prev()});");
+				// <!-- //[copy] -->
+//			}
+		});
+	},
+	// 학과(학생지원체크여부) [필수체크 ==> 항목]
+	"joinCheck" : function(req,mode) {
+		// <!-- customizing / copy -->
+		var jidSeq  = $("#writeForm").find("input[name='jidSeq']").val();							// 참여신청서 고유값
+		var jimmSeq = $(req).parents("li").find("input[name='jimmSeq[]']").val();					// 선발대상 테이블 고유번호
+		var colgCd = $(req).parents("li").find("input[name='colgCd[]']").val();						// 대학코드
+		var colgNm = $(req).parents("li").find("input[name='colgNm[]']").val();						// 대학명
+		var jimmCode = $(req).parents("li").find("input[name='jimmCode[]']").val();					// 학과코드
+		var jimmName = $(req).parents("li").find("input[name='jimmName[]']").val();					// 학과명
+		var jimmNum = $(req).parents("li").find("input[name='jimmNum[]']").val();					// 모집인원
+
+		var sexCode = "1089";					// 성별코드(숨김)
+		//var gradeCode = $(req).parents("li").find("select[name='sexCode[]'] option:selected").val();	// 성별코드(select)
+		// var gradeCode = $(req).parents("li").find("input[name='gradeCode[]']").val();				// 학년코드(숨김)
+		var gradeCode = $(req).parents("li").find("select[name='gradeCode[]'] option:selected").val();	// 학년코드(select)
+
+		var jimmProfId = $(req).parents("li").find("input[name='jimmProfId[]']").val();				// 학생평가교수 아이디
+		var jimmProfDept = $(req).parents("li").find("input[name='jimmProfDept[]']").val();			// 학생평가교수 학과
+		var jimmProfName = $(req).parents("li").find("input[name='jimmProfName[]']").val();			// 학생평가교수 이름
+		var param = {'jidSeq':jidSeq,'jimmSeq':jimmSeq,'colgCd':colgCd,'colgNm':colgNm,'jimmCode':jimmCode,'jimmName':jimmName,'jimmNum':jimmNum,'sexCode':sexCode,'gradeCode':gradeCode,'jimmProfId':jimmProfId,'jimmProfDept':jimmProfDept,'jimmProfName':jimmProfName,'mode':mode};
+		// <!-- customizing / copy -->
+
+		if(mode == "update") str = "수정";
+		else if(mode == "delete") str = "삭제";
+
+		if(mode == "insert") {
+			syworks.jimmProc(param);
+		}  else {
+			$.fun.ajax( {
+				"url" : "/common/jidJoinChk.do" ,
+				"data" : {
+							"jidSeq":jidSeq,
+							"jimmCode":jimmCode
+						} ,
+				"success" : function ( data ) {
+					data = $.fun.json_encode( data );
+					if ( data[ "result" ] > 0 ) {
+						$.fun.alert( {
+							"content" : "현장실습에 참여하는 학생이 존재하여 "+ str +" 할 수 없습니다." ,
+							"action" : function () {
+								return false;
+							}
+						} );
+						return false;
+					} else {
+						syworks.jimmProc(param);
+					}
+				}
+			});
+		}
+	},
+	// 학과(추가/수정/삭제)
+	"jimmProc" : function(data){
+		var confirmMsg = "등록 하시겠습니까?";
+		if(data.mode == "update") {
+			confirmMsg = "수정 하시겠습니까?";
+		} else if(data.mode == "delete") {
+			confirmMsg = "삭제 하시겠습니까?";
+		}
+		console.log(data);
+		$.fun.confirm({
+			"content":confirmMsg,
+			"action":function(){
+				$.fun.ajax({
+					"url":"/common/jidDeptProc.do",
+					"data":data,
+					"success":function(data){
+						data=$.fun.json_encode(data);
+						if(data["result"]>0){
+							$.fun.alert({
+								"content":"요청하신 작업이 완료되었습니다.",
+								"action":function(){
+									location.reload();
+								}
+							});
+						}else{
+							$.fun.alert({
+								"content":"요청이 실패되었습니다."
+							});
+						}
+					}
+				});
+				return false;
+			}
+		});
+		return false;
+	},
+	// 날짜변경 [필수체크 ==> 주간보고서,출근부]
+	"jidDateUpdate" : function(changeMode,jidSeq) {
+		req.workdayReday();
+
+		$.fun.ajax( {
+			"url" : "/common/jidDateChk.do" ,
+			"data" : {"jidSeq":jidSeq} ,
+			"success" : function ( data ) {
+				data = $.fun.json_encode( data );
+				if ( data[ "result" ] > 0 ) {
+					$.fun.alert( {
+						"content" : "현장실습에 참여하는 학생이 주간보고서 및 출근부 <br/>작성이력이 존재하여 기간변경을 할 수 없습니다.</br> 강제적으로 변경 할 경우 데이터 오류가 발생 될 수 있습니다." ,
+						/*"action" : function () {
+							return false;
+						},*/
+						"buttons" : {
+							"강제변경" : function () {
+								$( this ).dialog( 'destroy' ).remove();
+								syworks.save('JID','STEP2');
+							} ,
+							"닫기" : function () {
+								$( this ).dialog( 'destroy' ).remove();
+							}
+						}
+					} );
+					return false;
+				} else {
+					syworks.save('JID','STEP2');
+				}
+			}
+		});
+
+	}
+}
+//<!-- //[202202 SYWORKS전용] -->"�[AT�      c���c���D��(c��.   c    O^partitionKey=%28https%2Ctukorea.ac.kr%29,:https://coop.tukorea.ac.kr/common/js/common.function.js necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Date: Tue, 29 Nov 2022 05:03:42 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"85713-1647584076000"
+Last-Modified: Fri, 18 Mar 2022 06:14:36 GMT
+Content-Type: application/javascript
+Content-Length: 85713
+ original-response-headers Date: Tue, 29 Nov 2022 05:03:42 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips
+Accept-Ranges: bytes
+ETag: W/"85713-1647584076000"
+Last-Modified: Fri, 18 Mar 2022 06:14:36 GMT
+Content-Type: application/javascript
+Content-Length: 85713
+Keep-Alive: timeout=5, max=98
+Connection: Keep-Alive
+ ctid 2 uncompressed-len 0 net-response-time-onstart 158 net-response-time-onstop 159  N�
