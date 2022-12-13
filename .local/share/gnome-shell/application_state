@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <application-state>
   <context id="">
-    <application id="firefox.desktop" score="27" last-seen="1669698852"/>
-    <application id="org.gnome.Nautilus.desktop" score="1" last-seen="1669697402"/>
-    <application id="org.gnome.Terminal.desktop" score="2747" last-seen="1670302407"/>
+    <application id="org.gnome.Terminal.desktop" score="2768" last-seen="1670903324"/>
     <application id="org.gnome.Settings.desktop" score="89" last-seen="1670302390"/>
-    <application id="gnome-network-panel.desktop" score="0" last-seen="0"/>
   </context>
 </application-state>

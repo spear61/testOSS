@@ -1,0 +1,11 @@
+{"timestamp":636546,"category":"nimbus_events","name":"enrollment","extra":{"enrollment_id":"b41f90ed-adc4-4a7e-b8af-8a937fc5cce8","experiment_type":"nimbus","experiment":"task-continuity-sync-after-tab-change-rollout-40","branch":"sync-after-tab"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"experiment":"nimbus-pref-qa-1-2week-experiment","reason":"invalid-feature","feature":"nimbus-qa-1"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"experiment":"nimbus-pref-qa-1-2week-rollout","feature":"nimbus-qa-1","reason":"invalid-feature"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"experiment":"nimbus-pref-qa-1-4week-experiment","reason":"invalid-feature","feature":"nimbus-qa-1"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"reason":"invalid-feature","feature":"nimbus-qa-1","experiment":"nimbus-pref-qa-1-4week-rollout"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"reason":"invalid-feature","feature":"nimbus-qa-2","experiment":"nimbus-pref-qa-2-2week-experiment"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"experiment":"nimbus-pref-qa-2-2week-rollout","feature":"nimbus-qa-2","reason":"invalid-feature"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"feature":"nimbus-qa-2","reason":"invalid-feature","experiment":"nimbus-pref-qa-2-4week-experiment"}}
+{"timestamp":636548,"category":"nimbus_events","name":"validation_failed","extra":{"feature":"nimbus-qa-2","experiment":"nimbus-pref-qa-2-4week-rollout","reason":"invalid-feature"}}
+{"timestamp":651205,"category":"perf","name":"page_load","extra":{"load_type":"NORMAL","js_exec_time":"35","load_time":"2052","response_time":"993","fcp_time":"1625"}}
+{"timestamp":663382,"category":"perf","name":"page_load","extra":{"response_time":"220","js_exec_time":"0","load_time":"330","load_type":"STOP","fcp_time":"0"}}
