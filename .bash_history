@@ -277,3 +277,15 @@ cd /home
 ls
 git init
 su root
+ls
+cd /home
+ls
+cd seowj
+ls
+la -al
+ls -al
+clear
+git remote add origin https://github.com/spear61/testOSS.git
+git config --global --add safe.directory /home/seowj
+git remote add origin https://github.com/spear61/testOSS.git
+su root
